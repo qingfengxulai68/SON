@@ -8,7 +8,9 @@ différence son Vinyl :
 - image stéréo dans les basses fréquences est souvent réduite ou rendue mono
 - modifier de volume sonore
 - le vinyle peut compresser la plage dynamique
+--> https://www.projethomestudio.fr/reglages-compresseur-audio/
 
 (Le son provient de gros haut-parleurs de 1,20 m de haut, plutôt que de petits écouteurs (effet lointain))
+--> https://www.projethomestudio.fr/reverbe-mixage/ 
 
 format WAV
