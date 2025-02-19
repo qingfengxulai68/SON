@@ -34,6 +34,8 @@ class FaustGUI:
         self.send_midi_button = tk.Button(button_frame, text="Envoyer MIDI", command=self.send_midi)
         self.send_midi_button.pack(side="right", padx=5)
 
+        self.get_values()
+
     def create_slider(self, param):
         """Crée un slider Tkinter en fonction des paramètres FAUST"""
         frame = tk.Frame(self.root)
