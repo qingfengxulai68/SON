@@ -41,7 +41,7 @@ class MidiUI;
 class teensy_midi;
 #endif
 
-class vinyl : public AudioStream
+class Vinyl : public AudioStream
 {
     public:
     
