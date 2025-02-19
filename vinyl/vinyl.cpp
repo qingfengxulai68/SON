@@ -1,5 +1,5 @@
 /* ------------------------------------------------------------
-name: "vinyl2"
+name: "vinyl"
 Code generated with Faust 2.79.0 (https://faust.grame.fr)
 Compilation options: -a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -uim -single -ftz 0
 ------------------------------------------------------------ */
@@ -44,7 +44,7 @@ Compilation options: -a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -c
 
 #include <string.h> // for memset
 
-#include "vinyl2.h"
+#include "vinyl.h"
 
 // IMPORTANT: in order for MapUI to work, the teensy linker must be g++
 /************************** BEGIN MapUI.h ******************************
@@ -10484,7 +10484,7 @@ struct mydsp : public dsp {
 		m->declare("compressors.lib/compressor_mono:license", "MIT-style STK-4.3 license");
 		m->declare("compressors.lib/name", "Faust Compressor Effect Library");
 		m->declare("compressors.lib/version", "1.6.0");
-		m->declare("filename", "vinyl2.dsp");
+		m->declare("filename", "vinyl.dsp");
 		m->declare("filters.lib/fir:author", "Julius O. Smith III");
 		m->declare("filters.lib/fir:copyright", "Copyright (C) 2003-2019 by Julius O. Smith III <jos@ccrma.stanford.edu>");
 		m->declare("filters.lib/fir:license", "MIT-style STK-4.3 license");
@@ -10515,7 +10515,7 @@ struct mydsp : public dsp {
 		m->declare("maths.lib/license", "LGPL with exception");
 		m->declare("maths.lib/name", "Faust Math Library");
 		m->declare("maths.lib/version", "2.8.1");
-		m->declare("name", "vinyl2");
+		m->declare("name", "vinyl");
 		m->declare("noises.lib/name", "Faust Noise Generator Library");
 		m->declare("noises.lib/version", "1.4.1");
 		m->declare("oscillators.lib/lf_sawpos:author", "Bart Brouns, revised by Stéphane Letz");
@@ -10699,7 +10699,7 @@ struct mydsp : public dsp {
 	}
 	
 	virtual void buildUserInterface(UI* ui_interface) {
-		ui_interface->openVerticalBox("vinyl2");
+		ui_interface->openVerticalBox("vinyl");
 		ui_interface->addHorizontalSlider("Left Pop Trigger", &fHslider2, FAUSTFLOAT(0.004f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
 		ui_interface->addHorizontalSlider("Left Scratch Trigger", &fHslider3, FAUSTFLOAT(0.4f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
 		ui_interface->addHorizontalSlider("Left rumble Trigger", &fHslider1, FAUSTFLOAT(0.04f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.001f));
@@ -10810,7 +10810,7 @@ struct mydsp : public dsp {
 
 #ifdef FAUST_UIMACROS
 	
-	#define FAUST_FILE_NAME "vinyl2.dsp"
+	#define FAUST_FILE_NAME "vinyl.dsp"
 	#define FAUST_CLASS_NAME "mydsp"
 	#define FAUST_COMPILATION_OPIONS "-a /usr/local/share/faust/teensy/teensy.cpp -lang cpp -i -ct 1 -es 1 -mcd 16 -mdd 1024 -mdy 33 -uim -single -ftz 0"
 	#define FAUST_INPUTS 1
@@ -10861,7 +10861,7 @@ std::list<GUI*> GUI::fGuiList;
 ztimedmap GUI::gTimedZoneMap;
 #endif
 
-vinyl2::vinyl2() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
+vinyl::vinyl() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
 {
 #ifdef NVOICES
     int nvoices = NVOICES;
@@ -10903,7 +10903,7 @@ vinyl2::vinyl2() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
 #endif
 }
 
-vinyl2::~vinyl2()
+vinyl::~vinyl()
 {
     delete fDSP;
     delete fUI;
@@ -10922,7 +10922,7 @@ vinyl2::~vinyl2()
 }
 
 template <int INPUTS, int OUTPUTS>
-void vinyl2::updateImp(void)
+void vinyl::updateImp(void)
 {
 #if MIDICTRL
     // Process the MIDI messages received by the Teensy
@@ -10963,14 +10963,14 @@ void vinyl2::updateImp(void)
     }
 }
 
-void vinyl2::update(void) { updateImp<FAUST_INPUTS, FAUST_OUTPUTS>(); }
+void vinyl::update(void) { updateImp<FAUST_INPUTS, FAUST_OUTPUTS>(); }
 
-void vinyl2::setParamValue(const std::string& path, float value)
+void vinyl::setParamValue(const std::string& path, float value)
 {
     fUI->setParamValue(path, value);
 }
 
-float vinyl2::getParamValue(const std::string& path)
+float vinyl::getParamValue(const std::string& path)
 {
     return fUI->getParamValue(path);
 }

@@ -22,8 +22,8 @@
  
  ************************************************************************/
 
-#ifndef faust_vinyl2_h_
-#define faust_vinyl2_h_
+#ifndef faust_vinyl_h_
+#define faust_vinyl_h_
 
 #include <string>
 
@@ -41,12 +41,12 @@ class MidiUI;
 class teensy_midi;
 #endif
 
-class vinyl2 : public AudioStream
+class vinyl : public AudioStream
 {
     public:
     
-        vinyl2();
-        ~vinyl2();
+        vinyl();
+        ~vinyl();
     
         virtual void update(void);
     
