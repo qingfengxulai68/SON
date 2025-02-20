@@ -1,5 +1,3 @@
-
-
 import("stdfaust.lib");
 
 // Contrôle du gain
