@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include <usbmidi.h>
+
 #include "Vinyl.h"
 #include <cmath>
 
@@ -23,6 +23,7 @@ AudioConnection patchCord2;
 AudioConnection patchCord3;
 
 void setup() {
+
   audioShield.enable();
   audioShield.volume(2);
   AudioMemory(4);
@@ -55,7 +56,7 @@ void loop() {
   if (playButtonState == LOW && audioSD.isPlaying() == false) {
     usbMIDI.sendNoteOn(60, 127, 1); // MIDI Note On
     delay(800);
-    audioSD.play("song.WAV");
+    audioSD.play("yintian.WAV");
     patchCord2.connect(mix, 0, out, 0);
     patchCord3.connect(mix, 0, out, 1);
     delay(500);
