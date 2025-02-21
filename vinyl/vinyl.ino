@@ -25,7 +25,7 @@ void setup() {
   audioShield.enable();
   audioShield.volume(2);
   AudioMemory(4);
-  pinMode(PLAY_BUTTON_PIN, INPUT);
+  pinMode(PLAY_BUTTON_PIN, INPUT_PULLUP);
   mix.gain(0, 5);
   mix.gain(1, 0.15);
 
@@ -51,14 +51,14 @@ void loop() {
     previousGainValue = gainValue;
   }
 
-  if (playButtonState && audioSD.isPlaying() == false) {
+  if (playButtonState == LOW && audioSD.isPlaying() == false) {
     usbMIDI.sendNoteOn(60, 127, 1); // MIDI Note On
     delay(800);
     audioSD.play("song.WAV");
     patchCord2.connect(mix, 0, out, 0);
     patchCord3.connect(mix, 0, out, 1);
     delay(500);
-  } else if (playButtonState && audioSD.isPlaying() == true) {
+  } else if (playButtonState == LOW && audioSD.isPlaying() == true) {
     usbMIDI.sendNoteOff(60, 0, 1); // MIDI Note Off
     delay(100);
     audioSD.stop();
