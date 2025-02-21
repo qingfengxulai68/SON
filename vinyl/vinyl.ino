@@ -2,7 +2,6 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include <usbmidi.h>
 #include "Vinyl.h"
 #include <cmath>
 

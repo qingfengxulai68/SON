@@ -1,7 +1,7 @@
 import tkinter as tk
 import json
 
-class FaustGUI:
+class Fenetre:
     def __init__(self, root, midi_controller, json_file="vinyl.dsp.json"):
         self.root = root
         self.root.title("Contrôle FAUST")
@@ -72,5 +72,6 @@ class FaustGUI:
 
     def send_midi(self):
         """Récupère les valeurs et les envoie au MIDI"""
-        values = self.get_values()
-        self.midi_controller.send_values(values)
+        # values = self.get_values()
+        # self.midi_controller.send_values(values)
+        self.midi_controller.send_msg()

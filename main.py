@@ -1,5 +1,5 @@
 import tkinter as tk
-from faustGUI import FaustGUI
+from fenetre import Fenetre
 from midi import MidiController
 
 if __name__ == "__main__":
@@ -9,5 +9,5 @@ if __name__ == "__main__":
     midi_controller = MidiController()
 
     # Lancer l’interface avec MIDI
-    app = FaustGUI(root, midi_controller)
+    app = Fenetre(root, midi_controller)
     root.mainloop()
