@@ -45,7 +45,7 @@ class Vinyl : public AudioStream
 {
     public:
     
-        vinyl();
+        Vinyl();
         ~vinyl();
     
         virtual void update(void);

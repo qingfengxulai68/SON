@@ -4,11 +4,12 @@
 #include <SerialFlash.h>
 #include <usbmidi.h>
 #include "Vinyl.h"
+#include <cmath>
 
 #define SDCARD_CS_PIN 10
 #define SDCARD_MOSI_PIN  11
 #define SDCARD_SCK_PIN   13
-#define PLAY_BUTTON_PIN 0/2/3/4/5
+#define PLAY_BUTTON_PIN 2
 
 Vinyl vinyl;
 AudioOutputI2S out;

@@ -10861,7 +10861,7 @@ std::list<GUI*> GUI::fGuiList;
 ztimedmap GUI::gTimedZoneMap;
 #endif
 
-vinyl::vinyl() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
+vinyl::Vinyl() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
 {
 #ifdef NVOICES
     int nvoices = NVOICES;
