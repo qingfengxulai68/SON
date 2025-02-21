@@ -186,12 +186,12 @@ void setup() {
   Serial.println("SD Card OK.");
 
   if (!SD.exists("YINTIAN.WAV")) {
-    Serial.println("ERROR: SDTEST1.WAV NOT FOUND!");
+    Serial.println("ERROR: YINTIAN.WAV NOT FOUND!");
     while (1) {
       delay(500);
     }
   }
-  Serial.println("Found SDTEST1.WAV, starting playback.");
+  Serial.println("Found YINTIAN.WAV, starting playback.");
   
   audioSD.play("YINTIAN.WAV");
 }
