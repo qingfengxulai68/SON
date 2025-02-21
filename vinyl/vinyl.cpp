@@ -10861,7 +10861,7 @@ std::list<GUI*> GUI::fGuiList;
 ztimedmap GUI::gTimedZoneMap;
 #endif
 
-vinyl::Vinyl() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
+Vinyl::Vinyl() : AudioStream(FAUST_INPUTS,nullptr)
 {
 #ifdef NVOICES
     int nvoices = NVOICES;
@@ -10903,7 +10903,7 @@ vinyl::Vinyl() : AudioStream(FAUST_INPUTS, new audio_block_t*[FAUST_INPUTS])
 #endif
 }
 
-vinyl::~vinyl()
+Vinyl::~Vinyl()
 {
     delete fDSP;
     delete fUI;
@@ -10922,7 +10922,7 @@ vinyl::~vinyl()
 }
 
 template <int INPUTS, int OUTPUTS>
-void vinyl::updateImp(void)
+void Vinyl::updateImp(void)
 {
 #if MIDICTRL
     // Process the MIDI messages received by the Teensy
@@ -10934,7 +10934,7 @@ void vinyl::updateImp(void)
     if (INPUTS > 0) {
         audio_block_t* inBlock[INPUTS];
         for (int channel = 0; channel < INPUTS; channel++) {
-            inBlock[channel] = receiveReadOnly(channel);
+            inBlock[channel] = this->receiveReadOnly(channel);
             if (inBlock[channel]) {
                 for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
                     int16_t val = inBlock[channel]->data[i];
@@ -10951,26 +10951,26 @@ void vinyl::updateImp(void)
     
     audio_block_t* outBlock[OUTPUTS];
     for (int channel = 0; channel < OUTPUTS; channel++) {
-        outBlock[channel] = allocate();
+        outBlock[channel] = this-> allocate();
         if (outBlock[channel]) {
             for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
                 int16_t val = fOutChannel[channel][i]*MULT_16;
                 outBlock[channel]->data[i] = val;
             }
-            transmit(outBlock[channel], channel);
-            release(outBlock[channel]);
+            this->transmit(outBlock[channel], channel);
+            this->release(outBlock[channel]);
         }
     }
 }
 
-void vinyl::update(void) { updateImp<FAUST_INPUTS, FAUST_OUTPUTS>(); }
+void Vinyl::update(void) { updateImp<FAUST_INPUTS, FAUST_OUTPUTS>(); }
 
-void vinyl::setParamValue(const std::string& path, float value)
+void Vinyl::setParamValue(const std::string& path, float value)
 {
     fUI->setParamValue(path, value);
 }
 
-float vinyl::getParamValue(const std::string& path)
+float Vinyl::getParamValue(const std::string& path)
 {
     return fUI->getParamValue(path);
 }
