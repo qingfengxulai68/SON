@@ -2,7 +2,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include <usbMIDI.h>
+#include <usbmidi.h>
 #include "Vinyl.h"
 
 #define SDCARD_CS_PIN 10
