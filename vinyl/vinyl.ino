@@ -198,6 +198,13 @@ void setup() {
   audioSD.play("YINTIAN.WAV");
 }
 
+// MIDI_CREATE_DEFAULT_INSTANCE();
+
+// void setup() {
+//   MIDI.begin(MIDI_CHANNEL_OMNI);  // Ecoute sur tous les canaux
+//   Serial.begin(9600);  // Si vous voulez afficher des informations de débogage
+// }
+
 void loop() {
   if (!audioSD.isPlaying()) {
     audioSD.play("YINTIAN.WAV");
