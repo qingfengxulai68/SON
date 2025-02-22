@@ -4,11 +4,11 @@ import json
 class Fenetre:
     def __init__(self, root, midi_controller, json_file="vinyl.dsp.json"):
         self.root = root
-        self.root.title("Contrôle FAUST")
+        self.root.title("Fenêtre de Contrôle")
         self.midi_controller = midi_controller  # Instance du MidiController
 
         self.sliders = {}  # Stocke les sliders avec leurs adresses
-
+        
         # Zone d'affichage des valeurs actuelles
         self.values_display = tk.Text(self.root, height=10, width=50, state="disabled", bg="#f0f0f0")
         self.values_display.pack(pady=10)
@@ -35,13 +35,14 @@ class Fenetre:
         self.send_midi_button.pack(side="right", padx=5)
 
         self.get_values()
+        print(self.sliders)
 
     def create_slider(self, param):
         """Crée un slider Tkinter en fonction des paramètres FAUST"""
         frame = tk.Frame(self.root)
         frame.pack(pady=5, fill="x")
 
-        label = tk.Label(frame, text=param["label"], width=20, anchor="w")
+        label = tk.Label(frame, text=param["shortname"], width=20, anchor="w")
         label.pack(side="left", padx=5)
 
         slider = tk.Scale(frame, from_=param["min"], to=param["max"],
@@ -50,7 +51,7 @@ class Fenetre:
         slider.pack(side="right", padx=5)
 
         # Stocker le slider avec son adresse FAUST
-        self.sliders[param["address"]] = slider
+        self.sliders[param["shortname"]] = slider
 
     def get_values(self):
         """Récupère et affiche les valeurs actuelles des sliders"""

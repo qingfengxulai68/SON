@@ -143,8 +143,8 @@
 #include <SerialFlash.h>
 
 #define SDCARD_CS_PIN 10
-#define SDCARD_MOSI_PIN  11
-#define SDCARD_SCK_PIN   13
+#define SDCARD_MOSI_PIN 11
+#define SDCARD_SCK_PIN 13
 
 AudioOutputI2S out;
 AudioPlaySdWav audioSD;
@@ -158,6 +158,9 @@ AudioConnection patchCord2(mix, 0, out, 1);
 void setup() {
   Serial.begin(9600);
 
+  usbMIDI.setHandleControlChange(handleControlChange);
+  usbMIDI.begin();
+
   audioShield.enable();
   audioShield.volume(2);
   AudioMemory(4);
@@ -165,40 +168,45 @@ void setup() {
 
   SPI.setMOSI(SDCARD_MOSI_PIN);
   SPI.setSCK(SDCARD_SCK_PIN);
-  
+
   Serial.println("Checking SD Card...");
   if (!SD.begin(SDCARD_CS_PIN)) {
     Serial.println("SD Card initialization failed!");
-    while (1) {
-      delay(500);
-    }
+    while (1) delay(500);
   }
   Serial.println("SD Card OK.");
 
   if (!SD.exists("YINTIAN.WAV")) {
     Serial.println("ERROR: YINTIAN.WAV NOT FOUND!");
-    while (1) {
-      delay(500);
-    }
+    while (1) delay(500);
   }
-  Serial.println("Found YINTIAN.WAV, starting playback.");
-  
-  audioSD.play("YINTIAN.WAV");
+  Serial.println("Found YINTIAN.WAV, ready to play.");
 }
 
-// MIDI_CREATE_DEFAULT_INSTANCE();
-
-// void setup() {
-//   MIDI.begin(MIDI_CHANNEL_OMNI);  // Ecoute sur tous les canaux
-//   Serial.begin(9600);  // Si vous voulez afficher des informations de débogage
-// }
+// Fonction pour gérer les messages Control Change (volume)
+void handleControlChange(byte channel, byte control, byte value) {
+  if (control == 7) {  // CC7 = Volume
+    float newVolume = value / 100.0;  // Convertir 0-127 en 0.0-1.0
+    audioShield.volume(newVolume);
+    Serial.print("Volume réglé à : ");
+    Serial.println(newVolume);
+  }
+  else if (control == 8) {  // CC8 = effet
+    float newEffet = value / 100.0;  // Convertir 0-127 en 0.0-1.0
+    // audioShield.volume(newVolume);
+    Serial.print("Effet réglé à : ");
+    Serial.println(newEffet);
+  }
+}
 
 void loop() {
+  usbMIDI.read();  // Vérifie les messages MIDI entrants
+
   if (!audioSD.isPlaying()) {
     audioSD.play("YINTIAN.WAV");
   }
+  delay(100);
 }
-
 
 
 
