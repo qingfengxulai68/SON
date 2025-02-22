@@ -68,7 +68,7 @@ class Fenetre:
         for key, value in values.items():
             self.values_display.insert(tk.END, f"{key}: {value}\n")
         self.values_display.config(state="disabled")
-
+        print(values)
         return values  # Retourne les valeurs
 
     def send_midi(self):

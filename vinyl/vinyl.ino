@@ -162,7 +162,7 @@ void setup() {
   usbMIDI.begin();
 
   audioShield.enable();
-  audioShield.volume(2);
+  audioShield.volume(0.5);
   AudioMemory(4);
   mix.gain(0, 0.5);
 
