@@ -77,8 +77,7 @@
 
 
 
-//button功能删除后
-
+//button功能删除后 && potentiometre删除后
 // #include <Audio.h>
 // #include <SPI.h>
 // #include <SD.h>
@@ -104,10 +103,10 @@
 
 // void setup() {
 //   audioShield.enable();
-//   audioShield.volume(2);
-//   AudioMemory(4);
-//   mix.gain(0, 5);
-//   mix.gain(1, 0.15);
+//   audioShield.volume(2); // 设置音频盾的音量
+//   AudioMemory(4); // 分配音频内存
+//   mix.gain(0, 5);  // 设置输入 0 的增益
+//   mix.gain(1, 0.15); // 设置输入 1（SD卡音频）的增益
 
 //   SPI.setMOSI(SDCARD_MOSI_PIN);
 //   SPI.setSCK(SDCARD_SCK_PIN);
@@ -117,42 +116,31 @@
 //     }
 //   }
 
-//   // 🔥 **移除按钮逻辑，直接播放音乐**
-//   audioSD.play("yintian.WAV");
-//   patchCord2.connect(mix, 0, out, 0);
-//   patchCord3.connect(mix, 0, out, 1);
+//   // 播放音乐
+//   audioSD.play("YINTIAN.WAV");
+//   patchCord2.connect(mix, 0, out, 0);  // 将 mix 信号连接到输出
+//   patchCord3.connect(mix, 0, out, 1);  // 将 mix 信号连接到输出
 // }
 
 // void loop() {
-//   int knobValue = analogRead(A4);
-//   float gain = map(knobValue, 0, 1023, 0, 7);
-//   mix.gain(0, gain);
+//   // 🔥 移除了旋钮输入控制代码
 
-//   static float previousGainValue = -1.0;
-//   float gainValue = knobValue / 102.3;
-//   if (fabs(gainValue - previousGainValue) > 0.1) {
-//     usbMIDI.sendControlChange(7, gainValue * 127 / 7, 1); // CC 7: Volume
-//     previousGainValue = gainValue;
-//   }
-
-//   usbMIDI.read();
-
-//   // 🔥 **如果音乐播放结束，自动重新播放**
+//   // 如果音乐播放结束，自动重新播放
 //   if (!audioSD.isPlaying()) {
-//     audioSD.play("yintian.WAV");
+//     audioSD.play("YINTIAN.WAV");
 //   }
 
-//   delay(100);
+//   delay(100); // 延迟，避免过多重复执行
 // }
 
-// 删除vinyl相关
+
+
+// 删除vinyl相关后：成功播放音乐
 
 #include <Audio.h>
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include "Vinyl.h"
-#include <cmath>
 
 #define SDCARD_CS_PIN 10
 #define SDCARD_MOSI_PIN  11
@@ -204,18 +192,7 @@ void loop() {
   }
 }
 
-// void loop() {
-//   // Vérifier si des messages MIDI sont reçus
-//   while (MIDI.read()) {
-//     if (MIDI.getType() == midi::ControlChange) {
-//       byte controller = MIDI.getData1();  // Numéro de contrôleur
-//       byte value = MIDI.getData2();  // Valeur du contrôleur (0-127)
-      
-//       if (controller == 7) {  // Contrôleur 7 est souvent utilisé pour le volume
-//         Serial.print("Volume réglé à : ");
-//         Serial.println(value);
-//         // Appliquer le volume ou effectuer d'autres actions en fonction de la valeur
-//       }
-//     }
-//   }
-// }
+
+
+
+
