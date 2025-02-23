@@ -238,10 +238,16 @@ void setup() {
   usbMIDI.begin();
 
   audioShield.enable();
+<<<<<<< HEAD
   audioShield.volume(2); // Définir le volume du bouclier audio
   AudioMemory(20); // Allouer de la mémoire audio
   mix.gain(0, 1);  // Définir le gain de l'entrée 0 (bruit)
   mix.gain(1, 0);  // Définir le gain de l'entrée 1 (audio SD)
+=======
+  audioShield.volume(0.5);
+  AudioMemory(4);
+  mix.gain(0, 0.5);
+>>>>>>> 17ce3b6ddfc3f8c12677562a34bd12c62119bb71
 
   SPI.setMOSI(SDCARD_MOSI_PIN);
   SPI.setSCK(SDCARD_SCK_PIN);
