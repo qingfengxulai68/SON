@@ -233,8 +233,6 @@ float previousMotor = -1.0;
 
 void setup() {
   Serial.begin(9600);
-  MIDI.begin(MIDI_CHANNEL_OMNI); // Écouter tous les canaux MIDI
-  MIDI.setHandleControlChange(handleControlChange); // Écouter les événements CC
 
   audioShield.enable();
   audioShield.volume(2); // Définir le volume du bouclier audio
@@ -244,81 +242,34 @@ void setup() {
 
   SPI.setMOSI(SDCARD_MOSI_PIN);
   SPI.setSCK(SDCARD_SCK_PIN);
-  if (!(SD.begin(SDCARD_CS_PIN))) {
+  
+  Serial.println("Checking SD Card...");
+  if (!SD.begin(SDCARD_CS_PIN)) {
+    Serial.println("SD Card initialization failed!");
     while (1) {
-      Serial.println("Impossible d'accéder à la carte SD");
       delay(500);
     }
   }
+  Serial.println("SD Card OK.");
 
-  // Jouer de la musique
+  if (!SD.exists("YINTIAN.WAV")) {
+    Serial.println("ERROR: YINTIAN.WAV NOT FOUND!");
+    while (1) {
+      delay(500);
+    }
+  }
+  Serial.println("Found YINTIAN.WAV, starting playback.");
+  
   audioSD.play("YINTIAN.WAV");
 }
 
 void loop() {
-  MIDI.read(); // Écouter les messages MIDI
-
-  // Si la lecture de la musique se termine, relancer automatiquement
   if (!audioSD.isPlaying()) {
     audioSD.play("YINTIAN.WAV");
   }
-
-  delay(100); // Éviter une exécution trop rapide
 }
 
-// Traiter les messages de contrôle MIDI
-void handleControlChange(byte channel, byte controller, byte value) {
-  float newValue = value / 127.0; // Mappage de MIDI 0-127 à 0.0 - 1.0
-  
-  switch (controller) {
-    case 7: // CC7 contrôle le volume général (gain)
-      if (fabs(newValue - previousGain) > 0.01) {
-        vinyl.setParamValue("gain", newValue);
-        previousGain = newValue;
-        Serial.print("Gain: ");
-        Serial.println(newValue);
-      }
-      break;
-      
-    case 10: // CC10 contrôle le son de scratch
-      if (fabs(newValue - previousScratch) > 0.01) {
-        vinyl.setParamValue("Scratch Trigger", newValue);
-        previousScratch = newValue;
-        Serial.print("Scratch: ");
-        Serial.println(newValue);
-      }
-      break;
 
-    case 11: // CC11 contrôle le son de poussière
-      if (fabs(newValue - previousDust) > 0.01) {
-        vinyl.setParamValue("Pop Trigger", newValue);
-        previousDust = newValue;
-        Serial.print("Poussière: ");
-        Serial.println(newValue);
-      }
-      break;
 
-    case 12: // CC12 contrôle le déclencheur de ronflement
-      if (fabs(newValue - previousRumble) > 0.01) {
-        vinyl.setParamValue("Rumble Trigger", newValue);
-        previousRumble = newValue;
-        Serial.print("Ronflement: ");
-        Serial.println(newValue);
-      }
-      break;
 
-    case 13: // CC13 contrôle le déclencheur de bruit moteur
-      if (fabs(newValue - previousMotor) > 0.01) {
-        vinyl.setParamValue("Motor Noise Trigger", newValue);
-        previousMotor = newValue;
-        Serial.print("Bruit moteur: ");
-        Serial.println(newValue);
-      }
-      break;
 
-    default:
-      Serial.print("MIDI CC non géré: ");
-      Serial.println(controller);
-      break;
-  }
-}

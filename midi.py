@@ -15,41 +15,41 @@ class MidiController:
         print("Périphériques MIDI disponibles :")
         print(mido.get_output_names())
 
-    def send_msg(self):
-        if not self.midi_out:
-            print("Pas de sortie MIDI disponible")
-            return
-
-        msg = mido.Message('note_on', note=60, velocity=64)  # Note C4
-        self.midi_out.send(msg)
-        print("Message envoyé !")
-
-    # def send_values(self, values, start_cc=20, channel=0):
-    #     """
-    #     Envoie les valeurs FAUST sous forme de messages MIDI CC.
-        
-    #     :param values: Dictionnaire {paramètre: valeur}
-    #     :param start_cc: Premier numéro de CC (20 par défaut)
-    #     :param channel: Canal MIDI (0 = canal 1)
-    #     """
+    # def send_msg(self):
     #     if not self.midi_out:
-    #         print("Pas de sortie MIDI disponible !")
+    #         print("Pas de sortie MIDI disponible")
     #         return
-        
-    #     port_name = "Teensy MIDI 1"
-    #     port = mido.open_output(port_name)
 
     #     msg = mido.Message('note_on', note=60, velocity=64)  # Note C4
-    #     port.send(msg)
+    #     self.midi_out.send(msg)
     #     print("Message envoyé !")
 
-    #     print("\nEnvoi des valeurs MIDI :")
-    #     for i, (key, value) in enumerate(values.items()):
-    #         midi_cc = start_cc + i
-    #         midi_value = int(value * 127)  # Convertit en plage MIDI 0-127
-    #         msg = mido.Message('control_change', channel=channel, control=midi_cc, value=midi_value)
-    #         self.midi_out.send(msg)
-    #         print(f"CC {midi_cc} ({key}): {midi_value}")
+    def send_values(self, values, start_cc=20, channel=0):
+        """
+        Envoie les valeurs FAUST sous forme de messages MIDI CC.
+        
+        :param values: Dictionnaire {paramètre: valeur}
+        :param start_cc: Premier numéro de CC (20 par défaut)
+        :param channel: Canal MIDI (0 = canal 1)
+        """
+        if not self.midi_out:
+            print("Pas de sortie MIDI disponible !")
+            return
+        
+        port_name = "Teensy MIDI 1"
+        port = mido.open_output(port_name)
 
-    #     print("Envoi terminé.")
+        msg = mido.Message('note_on', note=60, velocity=64)  # Note C4
+        port.send(msg)
+        print("Message envoyé !")
+
+        print("\nEnvoi des valeurs MIDI :")
+        for i, (key, value) in enumerate(values.items()):
+            midi_cc = start_cc + i
+            midi_value = int(value * 127)  # Convertit en plage MIDI 0-127
+            msg = mido.Message('control_change', channel=channel, control=midi_cc, value=midi_value)
+            self.midi_out.send(msg)
+            print(f"CC {midi_cc} ({key}): {midi_value}")
+
+        print("Envoi terminé.")
 
