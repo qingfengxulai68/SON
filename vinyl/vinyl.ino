@@ -181,7 +181,7 @@
 
 // // Fonction pour gérer les messages Control Change (volume)
 // void handleControlChange(byte channel, byte control, byte value) {
-//   float newValue = value / 100.0;  // Convertir 0-127 en 0.0-1.0
+//   float newValue = value / 127.0;  // Convertir 0-127 en 0.0-1.0
 //   switch (control) {
 //     case 7: // CC7 contrôle le volume général (gain)
 //         audioShield.volume(newValue);
