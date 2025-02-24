@@ -22,8 +22,8 @@
  
  ************************************************************************/
 
-#ifndef faust_vinyl_h_
-#define faust_vinyl_h_
+#ifndef faust_Vinyl_h_
+#define faust_Vinyl_h_
 
 #include <string>
 
