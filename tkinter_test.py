@@ -1,6 +1,9 @@
 import mido
 import tkinter as tk
 
+print("Périphériques MIDI disponibles :")
+print(mido.get_output_names())
+
 # Ouvrir le port MIDI vers Teensy (remplacez par le port correct)
 output_port = mido.open_output('Teensy MIDI 1')  # Remplacez par le port correct
 
@@ -21,8 +24,8 @@ root = tk.Tk()
 root.title("Contrôle MIDI Volume")
 
 # Ajouter un curseur pour ajuster le volume
-volume_slider = tk.Scale(root, from_=0, to=127, orient="horizontal", command=update_volume)
-volume_slider.set(64)  # Valeur initiale du volume à 64
+volume_slider = tk.Scale(root, from_=0, to=100, orient="horizontal", command=update_volume)
+volume_slider.set(50)  # Valeur initiale du volume à 64
 volume_slider.pack(pady=20)
 
 # Ajouter un label pour afficher la valeur actuelle du volume

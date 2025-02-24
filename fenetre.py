@@ -73,6 +73,6 @@ class Fenetre:
 
     def send_midi(self):
         """Récupère les valeurs et les envoie au MIDI"""
-        # values = self.get_values()
-        # self.midi_controller.send_values(values)
+        values = self.get_values()
+        self.midi_controller.send_values(values)
         self.midi_controller.send_msg()
