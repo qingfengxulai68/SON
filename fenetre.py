@@ -13,6 +13,8 @@ class Fenetre:
         self.values_display = tk.Text(self.root, height=10, width=50, state="disabled", bg="#f0f0f0")
         self.values_display.pack(pady=10)
 
+        self.title = "YINTIAN.WAV"
+        self.etat = "on"
         # Charger le JSON FAUST
         with open(json_file, "r") as file:
             self.faust_config = json.load(file)
@@ -73,4 +75,10 @@ class Fenetre:
         """Récupère les valeurs et les envoie au MIDI"""
         values = self.get_values()
         self.midi_controller.send_values(values)
-        self.midi_controller.send_msg()
+
+    def send_title(self):
+        self.midi_controller.send_title(self.title)
+
+    def send_pauseplay(self):
+        self.midi_controller.send_etat(self.etat)
+

@@ -5,8 +5,8 @@ class MidiController:
         """Initialise la connexion MIDI"""
         self.midi_out = None
         try:
-            self.midi_out = mido.open_output('Teensy MIDI 1')
-            print(f"MIDI connecté à Teensy MIDI 1")
+            self.midi_out = mido.open_output(mido.get_output_names()[0])
+            print(f"MIDI connecté à {mido.get_output_names()[0]}")
             print(f"Port MIDI ouvert ? {self.midi_out is not None}")
 
         except IndexError:

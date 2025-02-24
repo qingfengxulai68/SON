@@ -4,8 +4,8 @@ import tkinter as tk
 print("Périphériques MIDI disponibles :")
 print(mido.get_output_names())
 
-# Ouvrir le port MIDI vers Teensy (remplacez par le port correct)
-output_port = mido.open_output('Teensy MIDI 1')  # Remplacez par le port correct
+# Ouvrir le port MIDI
+output_port = mido.open_output(mido.get_output_names()[0])
 
 # Fonction pour envoyer un message MIDI Control Change (Volume)
 def envoyer_volume(volume):
