@@ -16,7 +16,7 @@ class MidiController:
         print(mido.get_output_names())
 
 
-    def send_values(self, values, channel=0):
+    def send_values(self, values):
         """
         Envoie les valeurs FAUST sous forme de messages MIDI CC.
         
@@ -27,6 +27,8 @@ class MidiController:
         if not self.midi_out:
             print("Pas de sortie MIDI disponible !")
             return
+
+        print(values)
 
         print("\nEnvoi des valeurs MIDI :")
         for i, (key, value) in enumerate(values.items()):

@@ -35,7 +35,6 @@ class Fenetre:
         self.send_midi_button.pack(side="right", padx=5)
 
         self.get_values()
-        print(self.sliders)
 
     def create_slider(self, param):
         """Crée un slider Tkinter en fonction des paramètres FAUST"""
@@ -68,7 +67,6 @@ class Fenetre:
         for key, value in values.items():
             self.values_display.insert(tk.END, f"{key}: {value}\n")
         self.values_display.config(state="disabled")
-        print(values)
         return values  # Retourne les valeurs
 
     def send_midi(self):
