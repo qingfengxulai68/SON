@@ -1,0 +1,48 @@
+
+import("stdfaust.lib");
+
+// **Gain général**
+gain = hslider("Gain général", 0.5, 0, 1, 0.01);
+
+// **Signal original (entrée stéréo)**
+original_signal = _;
+
+// **Distorsion harmonique**
+distortion_amount = hslider("Niveau de distorsion", 0.4, 0, 1, 0.01);
+distortion = original_signal * (1 + (original_signal * distortion_amount));
+
+// **Atténuation des hautes fréquences**
+lowpass_freq = hslider("Fréquence de coupure (LPF)", 1000, 500, 5000, 10);
+hf_attenuation = distortion : fi.lowpass(3, lowpass_freq);
+
+// **Compression de la plage dynamique**
+compress_threshold = hslider("Seuil du compresseur (dB)", -10, -40, 0, 1);
+compress_ratio = hslider("Ratio du compresseur", 3, 1, 10, 0.1);
+compress_attack = hslider("Temps d'attaque du compresseur (s)", 0.01, 0.001, 0.1, 0.001);
+compress_release = hslider("Temps de relâchement du compresseur (s)", 0.1, 0.01, 1, 0.01);
+dynamic_compression = hf_attenuation : co.compressor_mono(compress_ratio, compress_threshold, compress_attack, compress_release);
+
+// **Bruit & Effets analogiques**
+white_noise_level = hslider("Niveau du bruit blanc", 0.7, 0, 1, 0.01);
+white_noise = (no.noise : si.smoo) * white_noise_level;
+
+dust_sound_level = hslider("Niveau du bruit de poussière", 0.01, 0, 0.1, 0.001);
+dust_sound = os.pulsetrain(50, 100000) * dust_sound_level;
+
+rumble_level = hslider("Niveau du grondement (basse fréquence)", 1, 0, 2, 0.01);
+rumble = (no.noise * rumble_level) : fi.lowpass(3, 30);
+
+motor_noise_level = hslider("Niveau du bruit du moteur", 0.05, 0, 0.5, 0.01);
+motor_noise = (os.osc(50) * motor_noise_level + os.osc(100) * (motor_noise_level / 2));
+
+// **Effet d'écho**
+echo_delay = hslider("Temps de retard de l'écho (s)", 0.4, 0.1, 2, 0.01);
+echo_feedback = hslider("Rétroaction de l'écho", 0.5, 0, 1, 0.01);
+delayed_signal = dynamic_compression : @(echo_delay * ma.SR) * echo_feedback;
+echoed_signal = dynamic_compression + delayed_signal;
+
+// **Mixage final**
+mixed_signal = (echoed_signal + white_noise + dust_sound + rumble + motor_noise) * gain;
+
+process = mixed_signal <: _,_;
+

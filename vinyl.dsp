@@ -73,7 +73,7 @@
 
 
 
-
+// VERSION 2   VERSION 2   VERSION 2    VERSION 2    VERSION 2   VERSION 2 
 
 import("stdfaust.lib");
 
@@ -122,3 +122,59 @@ mixed_signal = (dynamic_compression + white_noise + scratch_sound + dust_sound +
 
 process = mixed_signal <: _,_;
 
+
+
+
+
+
+
+
+
+
+
+
+
+// DERNIERE  VERSION   DERNIERE  VERSION   DERNIERE  VERSION   DERNIERE  VERSION   DERNIERE  VERSION
+
+
+
+
+import("stdfaust.lib");
+
+// Gain ，de 0 a 1
+gain = 0.5;
+
+// Signal original (entrée stéréo)
+
+original_signal = _;
+
+// YESSSS: Distorsion harmonique
+distortion = original_signal * (1 + (original_signal * 0.4));
+
+
+// YESSSS: Atténuation des hautes fréquences
+hf_attenuation = distortion : fi.lowpass(3, 1000);
+
+// Compression de la plage dynamique
+
+dynamic_compression = hf_attenuation : co.compressor_mono(3, -10, 0.01, 0.1);
+
+
+// YESSSS:Poussière et rayures  0.7
+white_noise = (no.noise : si.smoo) * 0.7;
+
+
+// YESSSS:尘埃爆裂声音 0.01
+dust_sound = os.pulsetrain(50, 100000) * 0.01;
+
+// YESSSS:机械噪音（低频隆隆声） NO.NOISE * 1
+rumble = (no.noise * 1) : fi.lowpass(3, 30);
+
+// YESSSS:电机噪音
+motor_noise = (os.osc(50) * 0.05 + os.osc(100) * 0.02) ;
+
+// Mixage final
+
+mixed_signal = (dynamic_compression + white_noise + dust_sound + rumble + motor_noise) * gain;
+
+process = mixed_signal <: _,_;
