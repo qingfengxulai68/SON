@@ -2,19 +2,43 @@ import tkinter as tk
 import json
 
 class Fenetre:
-    def __init__(self, root, midi_controller, json_file="vinyl.dsp.json"):
+    def __init__(self, root, midi_controller, json_file="parametres.json"):
         self.root = root
         self.root.title("Fenêtre de Contrôle")
         self.midi_controller = midi_controller  # Instance du MidiController
 
         self.sliders = {}  # Stocke les sliders avec leurs adresses
-        
-        # Zone d'affichage des valeurs actuelles
-        self.values_display = tk.Text(self.root, height=10, width=50, state="disabled", bg="#f0f0f0")
-        self.values_display.pack(pady=10)
 
-        self.title = "YINTIAN.WAV"
-        self.etat = "on"
+        # Zone d'affichage des valeurs actuelles
+        # self.values_display = tk.Text(self.root, height=10, width=50, state="disabled", bg="#f0f0f0")
+        # self.values_display.pack(pady=10)
+
+        # Ajout du choix du titre
+        self.titles = ["YINTIAN.WAV", "SONG_1.WAV", "SONG_2.WAV"]  # Liste des titres disponibles
+        self.selected_title = tk.StringVar(value=self.titles[0])
+
+        title_frame = tk.Frame(self.root)
+        title_frame.pack(pady=10)
+
+        tk.Label(title_frame, text="Choisir un titre:").pack(side="left", padx=5)
+        self.title_menu = tk.OptionMenu(title_frame, self.selected_title, *self.titles)
+        self.title_menu.pack(side="right", padx=5)
+
+        # Ajout des boutons Play/Pause
+        self.etat = "play"
+
+        control_frame = tk.Frame(self.root)
+        control_frame.pack(pady=5)
+
+        self.song_button = tk.Button(control_frame, text="Change song", command=self.send_title)
+        self.song_button.pack(side="top", padx=5)
+
+        self.play_button = tk.Button(control_frame, text="Play", command=self.send_play)
+        self.play_button.pack(side="left", padx=5)
+
+        self.pause_button = tk.Button(control_frame, text="Pause", command=self.send_pause)
+        self.pause_button.pack(side="right", padx=5)
+
         # Charger le JSON FAUST
         with open(json_file, "r") as file:
             self.faust_config = json.load(file)
@@ -62,13 +86,6 @@ class Fenetre:
         for key, value in values.items():
             print(f"{key}: {value}")
 
-        # Mise à jour de l'affichage Tkinter
-        self.values_display.config(state="normal")
-        self.values_display.delete("1.0", tk.END)
-        self.values_display.insert(tk.END, "=== Valeurs actuelles ===\n")
-        for key, value in values.items():
-            self.values_display.insert(tk.END, f"{key}: {value}\n")
-        self.values_display.config(state="disabled")
         return values  # Retourne les valeurs
 
     def send_midi(self):
@@ -77,8 +94,15 @@ class Fenetre:
         self.midi_controller.send_values(values)
 
     def send_title(self):
-        self.midi_controller.send_title(self.title)
+        """Envoie le titre sélectionné au contrôleur MIDI"""
+        self.midi_controller.send_title(self.selected_title.get())
 
-    def send_pauseplay(self):
+    def send_play(self):
+        """Envoie l'état Play au contrôleur MIDI"""
+        self.etat = "play"
         self.midi_controller.send_etat(self.etat)
 
+    def send_pause(self):
+        """Envoie l'état Pause au contrôleur MIDI"""
+        self.etat = "pause"
+        self.midi_controller.send_etat(self.etat)
