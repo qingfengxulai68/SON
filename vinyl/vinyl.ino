@@ -39,6 +39,7 @@
 //       delay(500);
 //     }
 //   }
+// }
 
 // void loop() {
 
@@ -366,7 +367,7 @@ AudioConnection patchCord1(vinyl, 0, mix, 0);
 AudioConnection patchCord2(mix, 0, out, 0); 
 AudioConnection patchCord3(mix, 0, out, 1); 
 
-char receivedTitle[8] = "YINTIAN.WAV";  // Stocke les caractères du titre (max 7 + '\0')
+char receivedTitle[20] = "YINTIAN.WAV";  // Stocke les caractères du titre (max 7 + '\0')
 int titleIndex = 0;
 bool titleReceived = false;
 bool isPlaying = true;
@@ -424,51 +425,56 @@ void handleControlChange(byte channel, byte controller, byte value) {
       break;
 
     case 8:  // Bruit blanc
-      vinyl.setParamValue("White Noise", newValue);
+      vinyl.setParamValue("white_noise", newValue);
       Serial.print("Bruit blanc: ");
       Serial.println(newValue);
       break;
 
     case 9:  // Son de scratch
-      vinyl.setParamValue("Scratch Trigger", newValue);
+      vinyl.setParamValue("scratch_sound", newValue);
       Serial.print("Scratch: ");
       Serial.println(newValue);
       break;
 
     case 10:  // Son de poussière
-      vinyl.setParamValue("Pop Trigger", newValue);
+      vinyl.setParamValue("dust_sound", newValue);
       Serial.print("Poussière: ");
       Serial.println(newValue);
       break;
 
     case 11:  // Ronflement
-      vinyl.setParamValue("Rumble Trigger", newValue);
+      vinyl.setParamValue("rumble", newValue);
       Serial.print("Ronflement: ");
       Serial.println(newValue);
       break;
 
     case 12:  // Bruit moteur
-      vinyl.setParamValue("Motor Noise Trigger", newValue);
+      vinyl.setParamValue("motor_noise", newValue);
       Serial.print("Bruit moteur: ");
       Serial.println(newValue);
       break;
 
     case 14:  // Play/Pause
-      if (value == 127) {
-        isPlaying = true;
-        Serial.println("Lecture : PLAY");
-        audioSD.play(receivedTitle);
-      } else {
+      if (value == 127) {  
+        if (!audioSD.isPlaying()) {
+          isPlaying = true;
+          Serial.println("Lecture : PLAY");
+          audioSD.play(receivedTitle);
+        } else {
+          Serial.println("Déjà en lecture.");
+        }
+      } else {  
         isPlaying = false;
         Serial.println("Lecture : PAUSE");
         audioSD.stop();
       }
       break;
 
-    case 20 ... 26:  // Réception du titre en ASCII (max 7 caractères)
+
+    case 20 ... 30:  // Réception du titre en ASCII (max 7 caractères)
       receivedTitle[controller - 20] = (char)value;
       if (controller == 26) {  // Fin du titre reçu
-        receivedTitle[7] = '\0';  // Terminer la chaîne proprement
+        receivedTitle[19] = '\0';  // Terminer la chaîne proprement
         titleReceived = true;
         Serial.print("Titre reçu : ");
         Serial.println(receivedTitle);

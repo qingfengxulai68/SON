@@ -45,8 +45,9 @@ class MidiController:
                     midi_cc = 11
                 case 'motor_noise':
                     midi_cc = 12
+            print(midi_cc)    
 
-            midi_value = int(value * 127)  # Convertit en plage MIDI 0-127
+            midi_value = int(max(0, min(127, int(value * 127))))  # Convertit en plage MIDI 0-127
             msg = mido.Message('control_change', control=midi_cc, value=midi_value)
             self.midi_out.send(msg)
             print(f"CC {midi_cc} ({key}): {midi_value}")
