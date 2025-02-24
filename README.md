@@ -16,3 +16,11 @@ différence son Vinyl :
 format WAV
 
 faust -json vinyl.dsp : generer json
+
+
+POSTER
+- expliquer fonction faust
+- schéma traitement signal
+- explication choix des paramètre (des filtres et tout)
+- attention pas trop de textes
+- schéma du signal avant/après
