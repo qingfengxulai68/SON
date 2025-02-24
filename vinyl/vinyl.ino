@@ -78,60 +78,60 @@
 
 
 //button功能删除后 && potentiometre删除后
-// #include <Audio.h>
-// #include <SPI.h>
-// #include <SD.h>
-// #include <SerialFlash.h>
+#include <Audio.h>
+#include <SPI.h>
+#include <SD.h>
+#include <SerialFlash.h>
 
-// #include "Vinyl.h"
-// #include <cmath>
+#include "Vinyl.h"
+#include <cmath>
 
-// #define SDCARD_CS_PIN 10
-// #define SDCARD_MOSI_PIN  11
-// #define SDCARD_SCK_PIN   13
+#define SDCARD_CS_PIN 10
+#define SDCARD_MOSI_PIN  11
+#define SDCARD_SCK_PIN   13
 
-// Vinyl vinyl;
-// AudioOutputI2S out;
-// AudioPlaySdWav audioSD;
-// AudioControlSGTL5000 audioShield;
-// AudioMixer4 mix;
+Vinyl vinyl;
+AudioOutputI2S out;
+AudioPlaySdWav audioSD;
+AudioControlSGTL5000 audioShield;
+AudioMixer4 mix;
 
-// AudioConnection patchCord0(vinyl, 0, mix, 0);
-// AudioConnection patchCord1(audioSD, 0, mix, 1);
-// AudioConnection patchCord2;
-// AudioConnection patchCord3;
 
-// void setup() {
-//   audioShield.enable();
-//   audioShield.volume(2); // 设置音频盾的音量
-//   AudioMemory(4); // 分配音频内存
-//   mix.gain(0, 5);  // 设置输入 0 的增益
-//   mix.gain(1, 0.15); // 设置输入 1（SD卡音频）的增益
+AudioConnection patchCord0(audioSD, 0, vinyl, 0);
+AudioConnection patchCord1(vinyl, 0, mix, 0);
+AudioConnection patchCord2(mix, 0, out, 0); 
+AudioConnection patchCord3(mix, 0, out, 1); 
 
-//   SPI.setMOSI(SDCARD_MOSI_PIN);
-//   SPI.setSCK(SDCARD_SCK_PIN);
-//   if (!(SD.begin(SDCARD_CS_PIN))) {
-//     while (1) {
-//       delay(500);
-//     }
-//   }
+void setup() {
+  Serial.begin(9600);
+  audioShield.enable();
+  audioShield.volume(0.5); // 设置音频盾的音量
+  AudioMemory(20); // 分配音频内存
+  mix.gain(0, 1);  // 设置输入 1（SD卡音频）的增益
+  mix.gain(1, 0); // 设置输入 0 （噪音）的增益
 
-//   // 播放音乐
-//   audioSD.play("YINTIAN.WAV");
-//   patchCord2.connect(mix, 0, out, 0);  // 将 mix 信号连接到输出
-//   patchCord3.connect(mix, 0, out, 1);  // 将 mix 信号连接到输出
-// }
+  SPI.setMOSI(SDCARD_MOSI_PIN);
+  SPI.setSCK(SDCARD_SCK_PIN);
+  if (!(SD.begin(SDCARD_CS_PIN))) {
+    while (1) {
+      Serial.println("Unable to access the SD card");
+      delay(500);
+    }
+  }
 
-// void loop() {
-//   // 🔥 移除了旋钮输入控制代码
+  // 播放音乐
+  audioSD.play("YINTIAN.WAV");
+}
 
-//   // 如果音乐播放结束，自动重新播放
-//   if (!audioSD.isPlaying()) {
-//     audioSD.play("YINTIAN.WAV");
-//   }
+void loop() {
 
-//   delay(100); // 延迟，避免过多重复执行
-// }
+  // 如果音乐播放结束，自动重新播放
+  if (!audioSD.isPlaying()) {
+    audioSD.play("YINTIAN.WAV");
+  }
+
+  delay(100); // 延迟，避免过多重复执行
+}
 
 
 
@@ -238,16 +238,10 @@ void setup() {
   usbMIDI.begin();
 
   audioShield.enable();
-<<<<<<< HEAD
   audioShield.volume(2); // Définir le volume du bouclier audio
   AudioMemory(20); // Allouer de la mémoire audio
   mix.gain(0, 1);  // Définir le gain de l'entrée 0 (bruit)
   mix.gain(1, 0);  // Définir le gain de l'entrée 1 (audio SD)
-=======
-  audioShield.volume(0.5);
-  AudioMemory(4);
-  mix.gain(0, 0.5);
->>>>>>> 17ce3b6ddfc3f8c12677562a34bd12c62119bb71
 
   SPI.setMOSI(SDCARD_MOSI_PIN);
   SPI.setSCK(SDCARD_SCK_PIN);
