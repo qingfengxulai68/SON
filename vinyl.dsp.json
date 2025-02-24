@@ -181,9 +181,9 @@
 				},
 				{
 					"type": "nentry",
-					"label": "volume",
-					"shortname": "volmue",
-					"address": "/vinyl/volume",
+					"label": "Volume",
+					"shortname": "Volume",
+					"address": "/vinyl/Volume",
 					"init": 0.5,
 					"min": 0,
 					"max": 1,
