@@ -39,7 +39,7 @@ class MidiController:
                     midi_cc = 8
                 case 'scratch_sound':
                     midi_cc = 9
-                case 'dust_sound':
+                case 'dust':
                     midi_cc = 10
                 case 'rumble':
                     midi_cc = 11
