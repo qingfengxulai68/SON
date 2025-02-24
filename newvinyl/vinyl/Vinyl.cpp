@@ -10350,105 +10350,74 @@ struct dsp_poly_factory : public dsp_factory {
 #define RESTRICT __restrict__
 #endif
 
-struct mydspSIG0 {
-	int iVec0[2];
-	int iRec0[2];
-	
-	int getNumInputsmydspSIG0() {
-		return 0;
-	}
-	int getNumOutputsmydspSIG0() {
-		return 1;
-	}
-	
-	void instanceInitmydspSIG0(int sample_rate) {
-		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
-			iVec0[l0] = 0;
-		}
-		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
-			iRec0[l1] = 0;
-		}
-	}
-	
-	void fillmydspSIG0(int count, float* table) {
-		for (int i1 = 0; i1 < count; i1 = i1 + 1) {
-			iVec0[0] = 1;
-			iRec0[0] = (iVec0[1] + iRec0[1]) % 65536;
-			table[i1] = std::sin(9.58738e-05f * float(iRec0[0]));
-			iVec0[1] = iVec0[0];
-			iRec0[1] = iRec0[0];
-		}
-	}
-
-};
-
-static mydspSIG0* newmydspSIG0() { return (mydspSIG0*)new mydspSIG0(); }
-static void deletemydspSIG0(mydspSIG0* dsp) { delete dsp; }
-
-static float ftbl0mydspSIG0[65536];
 static float mydsp_faustpower2_f(float value) {
 	return value * value;
 }
 
 struct mydsp : public dsp {
 	
-	int iVec1[2];
+	int iVec0[2];
 	int fSampleRate;
 	float fConst0;
 	float fConst1;
-	float fRec1[2];
-	float fConst2;
 	float fRec2[2];
+	float fRec1[2];
+	float fRec0[2];
+	float fConst2;
+	float fRec5[2];
+	float fRec4[2];
+	float fRec3[2];
 	FAUSTFLOAT fHslider0;
 	float fConst3;
 	float fConst4;
 	float fConst5;
 	float fConst6;
 	float fConst7;
-	int iRec5[2];
+	int iRec8[2];
 	FAUSTFLOAT fHslider1;
-	float fVec2[2];
+	float fVec1[2];
 	float fConst8;
 	float fConst9;
-	float fRec4[2];
-	float fRec3[3];
-	float fRec6[2];
-	float fVec3[2];
-	int IOTA0;
-	float fVec4[4096];
+	float fRec7[2];
+	float fRec6[3];
 	float fConst10;
-	int iConst11;
+	float fRec9[2];
+	float fVec2[2];
+	int IOTA0;
+	float fVec3[4096];
+	float fConst11;
 	int iConst12;
-	float fConst13;
+	int iConst13;
 	float fConst14;
 	float fConst15;
-	FAUSTFLOAT fHslider2;
 	float fConst16;
+	FAUSTFLOAT fHslider2;
 	float fConst17;
 	float fConst18;
-	float fRec7[2];
+	float fConst19;
+	float fRec10[2];
 	FAUSTFLOAT fHslider3;
 	FAUSTFLOAT fHslider4;
-	float fConst19;
+	float fConst20;
 	FAUSTFLOAT fHslider5;
 	FAUSTFLOAT fHslider6;
-	float fConst20;
+	float fConst21;
 	FAUSTFLOAT fHslider7;
-	float fVec5[2];
-	float fRec11[2];
-	float fRec10[3];
+	float fVec4[2];
+	float fRec14[2];
+	float fRec13[3];
 	FAUSTFLOAT fHslider8;
-	float fRec9[2];
+	float fRec12[2];
 	FAUSTFLOAT fHslider9;
-	float fRec8[2];
-	float fVec6[524288];
+	float fRec11[2];
+	float fVec5[65536];
 	FAUSTFLOAT fHslider10;
 	FAUSTFLOAT fHslider11;
-	float fVec7[2];
+	float fVec6[2];
+	float fRec18[2];
+	float fRec17[3];
+	float fRec16[2];
 	float fRec15[2];
-	float fRec14[3];
-	float fRec13[2];
-	float fRec12[2];
 	FAUSTFLOAT fHslider12;
 	
 	mydsp() {
@@ -10528,17 +10497,13 @@ struct mydsp : public dsp {
 	}
 	
 	static void classInit(int sample_rate) {
-		mydspSIG0* sig0 = newmydspSIG0();
-		sig0->instanceInitmydspSIG0(sample_rate);
-		sig0->fillmydspSIG0(65536, ftbl0mydspSIG0);
-		deletemydspSIG0(sig0);
 	}
 	
 	virtual void instanceConstants(int sample_rate) {
 		fSampleRate = sample_rate;
 		fConst0 = std::min<float>(1.92e+05f, std::max<float>(1.0f, float(fSampleRate)));
-		fConst1 = 1e+02f / fConst0;
-		fConst2 = 5e+01f / fConst0;
+		fConst1 = 628.31854f / fConst0;
+		fConst2 = 314.15927f / fConst0;
 		fConst3 = std::tan(94.24778f / fConst0);
 		fConst4 = 2.0f * (1.0f - 1.0f / mydsp_faustpower2_f(fConst3));
 		fConst5 = 1.0f / fConst3;
@@ -10546,17 +10511,18 @@ struct mydsp : public dsp {
 		fConst7 = 1.0f / ((fConst5 + 1.0f) / fConst3 + 1.0f);
 		fConst8 = 1.0f - fConst5;
 		fConst9 = 1.0f / (fConst5 + 1.0f);
-		fConst10 = std::max<float>(0.0f, std::min<float>(2047.0f, 2e+03f * fConst0));
-		iConst11 = int(fConst10);
-		iConst12 = iConst11 + 1;
-		fConst13 = std::floor(fConst10);
-		fConst14 = fConst10 - fConst13;
-		fConst15 = fConst13 + (1.0f - fConst10);
-		fConst16 = 0.005f * fConst0;
-		fConst17 = 1.0f - 44.1f / fConst0;
-		fConst18 = 2.0535662e-08f / fConst0;
-		fConst19 = 1.0f / fConst0;
-		fConst20 = 3.1415927f / fConst0;
+		fConst10 = 5e+01f / fConst0;
+		fConst11 = std::max<float>(0.0f, std::min<float>(2047.0f, 2e+03f * fConst0));
+		iConst12 = int(fConst11);
+		iConst13 = iConst12 + 1;
+		fConst14 = std::floor(fConst11);
+		fConst15 = fConst11 - fConst14;
+		fConst16 = fConst14 + (1.0f - fConst11);
+		fConst17 = 0.005f * fConst0;
+		fConst18 = 1.0f - 44.1f / fConst0;
+		fConst19 = 2.0535662e-08f / fConst0;
+		fConst20 = 1.0f / fConst0;
+		fConst21 = 3.1415927f / fConst0;
 	}
 	
 	virtual void instanceResetUserInterface() {
@@ -10570,78 +10536,90 @@ struct mydsp : public dsp {
 		fHslider7 = FAUSTFLOAT(0.4f);
 		fHslider8 = FAUSTFLOAT(0.1f);
 		fHslider9 = FAUSTFLOAT(3.0f);
-		fHslider10 = FAUSTFLOAT(0.4f);
+		fHslider10 = FAUSTFLOAT(0.1f);
 		fHslider11 = FAUSTFLOAT(0.5f);
 		fHslider12 = FAUSTFLOAT(0.5f);
 	}
 	
 	virtual void instanceClear() {
+		for (int l0 = 0; l0 < 2; l0 = l0 + 1) {
+			iVec0[l0] = 0;
+		}
+		for (int l1 = 0; l1 < 2; l1 = l1 + 1) {
+			fRec2[l1] = 0.0f;
+		}
 		for (int l2 = 0; l2 < 2; l2 = l2 + 1) {
-			iVec1[l2] = 0;
+			fRec1[l2] = 0.0f;
 		}
 		for (int l3 = 0; l3 < 2; l3 = l3 + 1) {
-			fRec1[l3] = 0.0f;
+			fRec0[l3] = 0.0f;
 		}
 		for (int l4 = 0; l4 < 2; l4 = l4 + 1) {
-			fRec2[l4] = 0.0f;
+			fRec5[l4] = 0.0f;
 		}
 		for (int l5 = 0; l5 < 2; l5 = l5 + 1) {
-			iRec5[l5] = 0;
+			fRec4[l5] = 0.0f;
 		}
 		for (int l6 = 0; l6 < 2; l6 = l6 + 1) {
-			fVec2[l6] = 0.0f;
+			fRec3[l6] = 0.0f;
 		}
 		for (int l7 = 0; l7 < 2; l7 = l7 + 1) {
-			fRec4[l7] = 0.0f;
+			iRec8[l7] = 0;
 		}
-		for (int l8 = 0; l8 < 3; l8 = l8 + 1) {
-			fRec3[l8] = 0.0f;
+		for (int l8 = 0; l8 < 2; l8 = l8 + 1) {
+			fVec1[l8] = 0.0f;
 		}
 		for (int l9 = 0; l9 < 2; l9 = l9 + 1) {
-			fRec6[l9] = 0.0f;
+			fRec7[l9] = 0.0f;
 		}
-		for (int l10 = 0; l10 < 2; l10 = l10 + 1) {
-			fVec3[l10] = 0.0f;
+		for (int l10 = 0; l10 < 3; l10 = l10 + 1) {
+			fRec6[l10] = 0.0f;
 		}
-		IOTA0 = 0;
-		for (int l11 = 0; l11 < 4096; l11 = l11 + 1) {
-			fVec4[l11] = 0.0f;
+		for (int l11 = 0; l11 < 2; l11 = l11 + 1) {
+			fRec9[l11] = 0.0f;
 		}
 		for (int l12 = 0; l12 < 2; l12 = l12 + 1) {
-			fRec7[l12] = 0.0f;
+			fVec2[l12] = 0.0f;
 		}
-		for (int l13 = 0; l13 < 2; l13 = l13 + 1) {
-			fVec5[l13] = 0.0f;
+		IOTA0 = 0;
+		for (int l13 = 0; l13 < 4096; l13 = l13 + 1) {
+			fVec3[l13] = 0.0f;
 		}
 		for (int l14 = 0; l14 < 2; l14 = l14 + 1) {
-			fRec11[l14] = 0.0f;
+			fRec10[l14] = 0.0f;
 		}
-		for (int l15 = 0; l15 < 3; l15 = l15 + 1) {
-			fRec10[l15] = 0.0f;
+		for (int l15 = 0; l15 < 2; l15 = l15 + 1) {
+			fVec4[l15] = 0.0f;
 		}
 		for (int l16 = 0; l16 < 2; l16 = l16 + 1) {
-			fRec9[l16] = 0.0f;
+			fRec14[l16] = 0.0f;
 		}
-		for (int l17 = 0; l17 < 2; l17 = l17 + 1) {
-			fRec8[l17] = 0.0f;
+		for (int l17 = 0; l17 < 3; l17 = l17 + 1) {
+			fRec13[l17] = 0.0f;
 		}
-		for (int l18 = 0; l18 < 524288; l18 = l18 + 1) {
-			fVec6[l18] = 0.0f;
+		for (int l18 = 0; l18 < 2; l18 = l18 + 1) {
+			fRec12[l18] = 0.0f;
 		}
 		for (int l19 = 0; l19 < 2; l19 = l19 + 1) {
-			fVec7[l19] = 0.0f;
+			fRec11[l19] = 0.0f;
 		}
-		for (int l20 = 0; l20 < 2; l20 = l20 + 1) {
-			fRec15[l20] = 0.0f;
+		for (int l20 = 0; l20 < 65536; l20 = l20 + 1) {
+			fVec5[l20] = 0.0f;
 		}
-		for (int l21 = 0; l21 < 3; l21 = l21 + 1) {
-			fRec14[l21] = 0.0f;
+		for (int l21 = 0; l21 < 2; l21 = l21 + 1) {
+			fVec6[l21] = 0.0f;
 		}
 		for (int l22 = 0; l22 < 2; l22 = l22 + 1) {
-			fRec13[l22] = 0.0f;
+			fRec18[l22] = 0.0f;
 		}
-		for (int l23 = 0; l23 < 2; l23 = l23 + 1) {
-			fRec12[l23] = 0.0f;
+		for (int l23 = 0; l23 < 3; l23 = l23 + 1) {
+			fRec17[l23] = 0.0f;
+		}
+		for (int l24 = 0; l24 < 2; l24 = l24 + 1) {
+			fRec16[l24] = 0.0f;
+		}
+		for (int l25 = 0; l25 < 2; l25 = l25 + 1) {
+			fRec15[l25] = 0.0f;
 		}
 	}
 	
@@ -10666,19 +10644,19 @@ struct mydsp : public dsp {
 	
 	virtual void buildUserInterface(UI* ui_interface) {
 		ui_interface->openVerticalBox("Vinyl");
-		ui_interface->addHorizontalSlider("Fréquence de coupure (LPF)", &fHslider6, FAUSTFLOAT(1e+03f), FAUSTFLOAT(5e+02f), FAUSTFLOAT(5e+03f), FAUSTFLOAT(1e+01f));
-		ui_interface->addHorizontalSlider("Gain général", &fHslider12, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Niveau de distorsion", &fHslider7, FAUSTFLOAT(0.4f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Niveau du bruit blanc", &fHslider3, FAUSTFLOAT(0.7f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Niveau du bruit de poussière", &fHslider2, FAUSTFLOAT(0.01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.1f), FAUSTFLOAT(0.001f));
-		ui_interface->addHorizontalSlider("Niveau du bruit du moteur", &fHslider0, FAUSTFLOAT(0.05f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.5f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Niveau du grondement (basse fréquence)", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(2.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Ratio du compresseur", &fHslider9, FAUSTFLOAT(3.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(1e+01f), FAUSTFLOAT(0.1f));
-		ui_interface->addHorizontalSlider("Rétroaction de l'écho", &fHslider11, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Seuil du compresseur (dB)", &fHslider5, FAUSTFLOAT(-1e+01f), FAUSTFLOAT(-4e+01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f));
-		ui_interface->addHorizontalSlider("Temps d'attaque du compresseur (s)", &fHslider4, FAUSTFLOAT(0.01f), FAUSTFLOAT(0.001f), FAUSTFLOAT(0.1f), FAUSTFLOAT(0.001f));
-		ui_interface->addHorizontalSlider("Temps de relâchement du compresseur (s)", &fHslider8, FAUSTFLOAT(0.1f), FAUSTFLOAT(0.01f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
-		ui_interface->addHorizontalSlider("Temps de retard de l'écho (s)", &fHslider10, FAUSTFLOAT(0.4f), FAUSTFLOAT(0.1f), FAUSTFLOAT(2.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("compress_attack", &fHslider4, FAUSTFLOAT(0.01f), FAUSTFLOAT(0.001f), FAUSTFLOAT(0.1f), FAUSTFLOAT(0.001f));
+		ui_interface->addHorizontalSlider("compress_ratio", &fHslider9, FAUSTFLOAT(3.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(1e+01f), FAUSTFLOAT(0.1f));
+		ui_interface->addHorizontalSlider("compress_release", &fHslider8, FAUSTFLOAT(0.1f), FAUSTFLOAT(0.01f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("compress_threshold", &fHslider5, FAUSTFLOAT(-1e+01f), FAUSTFLOAT(-4e+01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f));
+		ui_interface->addHorizontalSlider("distortion", &fHslider7, FAUSTFLOAT(0.4f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("dust", &fHslider2, FAUSTFLOAT(0.01f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.1f), FAUSTFLOAT(0.001f));
+		ui_interface->addHorizontalSlider("echo_delay", &fHslider10, FAUSTFLOAT(0.1f), FAUSTFLOAT(0.1f), FAUSTFLOAT(0.25f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("echo_feedback", &fHslider11, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("gain", &fHslider12, FAUSTFLOAT(0.5f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("lowpass_freq", &fHslider6, FAUSTFLOAT(1e+03f), FAUSTFLOAT(5e+02f), FAUSTFLOAT(5e+03f), FAUSTFLOAT(1e+01f));
+		ui_interface->addHorizontalSlider("motor_noise", &fHslider0, FAUSTFLOAT(0.05f), FAUSTFLOAT(0.0f), FAUSTFLOAT(0.5f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("rumble", &fHslider1, FAUSTFLOAT(1.0f), FAUSTFLOAT(0.0f), FAUSTFLOAT(2.0f), FAUSTFLOAT(0.01f));
+		ui_interface->addHorizontalSlider("white_noise", &fHslider3, FAUSTFLOAT(0.7f), FAUSTFLOAT(0.0f), FAUSTFLOAT(1.0f), FAUSTFLOAT(0.01f));
 		ui_interface->closeBox();
 	}
 	
@@ -10691,15 +10669,15 @@ struct mydsp : public dsp {
 		FAUSTFLOAT* output1 = outputs[1];
 		float fSlow0 = float(fHslider0);
 		float fSlow1 = 4.656613e-10f * float(fHslider1);
-		float fSlow2 = fConst16 * float(fHslider2);
+		float fSlow2 = fConst17 * float(fHslider2);
 		float fSlow3 = float(fHslider3);
 		float fSlow4 = float(fHslider4);
 		float fSlow5 = 0.5f * fSlow4;
 		int iSlow6 = std::fabs(fSlow5) < 1.1920929e-07f;
-		float fSlow7 = ((iSlow6) ? 0.0f : std::exp(-(fConst19 / ((iSlow6) ? 1.0f : fSlow5))));
+		float fSlow7 = ((iSlow6) ? 0.0f : std::exp(-(fConst20 / ((iSlow6) ? 1.0f : fSlow5))));
 		float fSlow8 = 1.0f - fSlow7;
 		float fSlow9 = float(fHslider5);
-		float fSlow10 = std::tan(fConst20 * float(fHslider6));
+		float fSlow10 = std::tan(fConst21 * float(fHslider6));
 		float fSlow11 = 2.0f * (1.0f - 1.0f / mydsp_faustpower2_f(fSlow10));
 		float fSlow12 = 1.0f / fSlow10;
 		float fSlow13 = (fSlow12 + -1.0f) / fSlow10 + 1.0f;
@@ -10709,79 +10687,86 @@ struct mydsp : public dsp {
 		float fSlow17 = 1.0f / (fSlow12 + 1.0f);
 		float fSlow18 = float(fHslider8);
 		int iSlow19 = std::fabs(fSlow18) < 1.1920929e-07f;
-		float fSlow20 = ((iSlow19) ? 0.0f : std::exp(-(fConst19 / ((iSlow19) ? 1.0f : fSlow18))));
+		float fSlow20 = ((iSlow19) ? 0.0f : std::exp(-(fConst20 / ((iSlow19) ? 1.0f : fSlow18))));
 		int iSlow21 = std::fabs(fSlow4) < 1.1920929e-07f;
-		float fSlow22 = ((iSlow21) ? 0.0f : std::exp(-(fConst19 / ((iSlow21) ? 1.0f : fSlow4))));
+		float fSlow22 = ((iSlow21) ? 0.0f : std::exp(-(fConst20 / ((iSlow21) ? 1.0f : fSlow4))));
 		float fSlow23 = 1.0f / std::max<float>(1.1920929e-07f, float(fHslider9)) + -1.0f;
 		int iSlow24 = int(fConst0 * float(fHslider10));
 		float fSlow25 = float(fHslider11);
 		float fSlow26 = float(fHslider12);
 		for (int i0 = 0; i0 < count; i0 = i0 + 1) {
-			iVec1[0] = 1;
-			int iTemp0 = 1 - iVec1[1];
-			float fTemp1 = ((iTemp0) ? 0.0f : fConst1 + fRec1[1]);
-			fRec1[0] = fTemp1 - std::floor(fTemp1);
-			float fTemp2 = ((iTemp0) ? 0.0f : fConst2 + fRec2[1]);
-			fRec2[0] = fTemp2 - std::floor(fTemp2);
-			iRec5[0] = 1103515245 * iRec5[1] + 12345;
-			float fTemp3 = float(iRec5[0]);
-			float fTemp4 = fSlow1 * fTemp3;
-			fVec2[0] = fTemp4;
-			fRec4[0] = -(fConst9 * (fConst8 * fRec4[1] - (fTemp4 + fVec2[1])));
-			fRec3[0] = fRec4[0] - fConst7 * (fConst6 * fRec3[2] + fConst4 * fRec3[1]);
-			float fTemp5 = ((iTemp0) ? 0.0f : fConst2 + fRec6[1]);
-			fRec6[0] = fTemp5 - std::floor(fTemp5);
-			float fTemp6 = mydsp_faustpower2_f(2.0f * fRec6[0] + -1.0f);
-			fVec3[0] = fTemp6;
-			float fTemp7 = float(iVec1[1]) * (fTemp6 - fVec3[1]);
-			fVec4[IOTA0 & 4095] = fTemp7;
-			fRec7[0] = fConst18 * fTemp3 + fConst17 * fRec7[1];
-			float fTemp8 = float(input2[i0]) * (fSlow15 * float(input3[i0]) + 1.0f);
-			fVec5[0] = fTemp8;
-			fRec11[0] = -(fSlow17 * (fSlow16 * fRec11[1] - (fTemp8 + fVec5[1])));
-			fRec10[0] = fRec11[0] - fSlow14 * (fSlow13 * fRec10[2] + fSlow11 * fRec10[1]);
-			float fTemp9 = fRec10[2] + fRec10[0] + 2.0f * fRec10[1];
-			float fTemp10 = std::fabs(fSlow14 * fTemp9);
-			float fTemp11 = ((fTemp10 > fRec9[1]) ? fSlow22 : fSlow20);
-			fRec9[0] = fTemp10 * (1.0f - fTemp11) + fRec9[1] * fTemp11;
-			fRec8[0] = fSlow23 * std::max<float>(2e+01f * std::log10(std::max<float>(1.1754944e-38f, fRec9[0])) - fSlow9, 0.0f) * fSlow8 + fSlow7 * fRec8[1];
-			fVec6[IOTA0 & 524287] = fSlow14 * fTemp9 * std::pow(1e+01f, 0.05f * fRec8[0]);
-			float fTemp12 = float(input0[i0]) * (fSlow15 * float(input1[i0]) + 1.0f);
-			fVec7[0] = fTemp12;
-			fRec15[0] = -(fSlow17 * (fSlow16 * fRec15[1] - (fTemp12 + fVec7[1])));
-			fRec14[0] = fRec15[0] - fSlow14 * (fSlow13 * fRec14[2] + fSlow11 * fRec14[1]);
-			float fTemp13 = fRec14[2] + fRec14[0] + 2.0f * fRec14[1];
-			float fTemp14 = std::fabs(fSlow14 * fTemp13);
-			float fTemp15 = ((fTemp14 > fRec13[1]) ? fSlow22 : fSlow20);
-			fRec13[0] = fTemp14 * (1.0f - fTemp15) + fRec13[1] * fTemp15;
-			fRec12[0] = fSlow23 * std::max<float>(2e+01f * std::log10(std::max<float>(1.1754944e-38f, fRec13[0])) - fSlow9, 0.0f) * fSlow8 + fSlow7 * fRec12[1];
-			float fTemp16 = fSlow26 * (fSlow14 * fTemp13 * std::pow(1e+01f, 0.05f * fRec12[0]) + fSlow25 * fVec6[(IOTA0 - iSlow24) & 524287] + fSlow3 * fRec7[0] + fSlow2 * (fTemp7 - fConst15 * fVec4[(IOTA0 - iConst11) & 4095] - fConst14 * fVec4[(IOTA0 - iConst12) & 4095]) + fConst7 * (fRec3[2] + fRec3[0] + 2.0f * fRec3[1]) + fSlow0 * (ftbl0mydspSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec2[0]), 65535))] + 0.5f * ftbl0mydspSIG0[std::max<int>(0, std::min<int>(int(65536.0f * fRec1[0]), 65535))]));
-			output0[i0] = FAUSTFLOAT(fTemp16);
-			output1[i0] = FAUSTFLOAT(fTemp16);
-			iVec1[1] = iVec1[0];
-			fRec1[1] = fRec1[0];
+			iVec0[0] = 1;
+			int iTemp0 = 1 - iVec0[1];
+			float fTemp1 = float(iTemp0);
+			fRec2[0] = fRec2[1] - fConst1 * fRec0[1];
+			fRec1[0] = fConst1 * fRec2[0] + fTemp1 + fRec1[1];
+			fRec0[0] = fRec1[0];
+			fRec5[0] = fRec5[1] - fConst2 * fRec3[1];
+			fRec4[0] = fConst2 * fRec5[0] + fTemp1 + fRec4[1];
+			fRec3[0] = fRec4[0];
+			iRec8[0] = 1103515245 * iRec8[1] + 12345;
+			float fTemp2 = float(iRec8[0]);
+			float fTemp3 = fSlow1 * fTemp2;
+			fVec1[0] = fTemp3;
+			fRec7[0] = -(fConst9 * (fConst8 * fRec7[1] - (fTemp3 + fVec1[1])));
+			fRec6[0] = fRec7[0] - fConst7 * (fConst6 * fRec6[2] + fConst4 * fRec6[1]);
+			float fTemp4 = ((iTemp0) ? 0.0f : fConst10 + fRec9[1]);
+			fRec9[0] = fTemp4 - std::floor(fTemp4);
+			float fTemp5 = mydsp_faustpower2_f(2.0f * fRec9[0] + -1.0f);
+			fVec2[0] = fTemp5;
+			float fTemp6 = float(iVec0[1]) * (fTemp5 - fVec2[1]);
+			fVec3[IOTA0 & 4095] = fTemp6;
+			fRec10[0] = fConst19 * fTemp2 + fConst18 * fRec10[1];
+			float fTemp7 = float(input2[i0]) * (fSlow15 * float(input3[i0]) + 1.0f);
+			fVec4[0] = fTemp7;
+			fRec14[0] = -(fSlow17 * (fSlow16 * fRec14[1] - (fTemp7 + fVec4[1])));
+			fRec13[0] = fRec14[0] - fSlow14 * (fSlow13 * fRec13[2] + fSlow11 * fRec13[1]);
+			float fTemp8 = fRec13[2] + fRec13[0] + 2.0f * fRec13[1];
+			float fTemp9 = std::fabs(fSlow14 * fTemp8);
+			float fTemp10 = ((fTemp9 > fRec12[1]) ? fSlow22 : fSlow20);
+			fRec12[0] = fTemp9 * (1.0f - fTemp10) + fRec12[1] * fTemp10;
+			fRec11[0] = fSlow23 * std::max<float>(2e+01f * std::log10(std::max<float>(1.1754944e-38f, fRec12[0])) - fSlow9, 0.0f) * fSlow8 + fSlow7 * fRec11[1];
+			fVec5[IOTA0 & 65535] = fSlow14 * fTemp8 * std::pow(1e+01f, 0.05f * fRec11[0]);
+			float fTemp11 = float(input0[i0]) * (fSlow15 * float(input1[i0]) + 1.0f);
+			fVec6[0] = fTemp11;
+			fRec18[0] = -(fSlow17 * (fSlow16 * fRec18[1] - (fTemp11 + fVec6[1])));
+			fRec17[0] = fRec18[0] - fSlow14 * (fSlow13 * fRec17[2] + fSlow11 * fRec17[1]);
+			float fTemp12 = fRec17[2] + fRec17[0] + 2.0f * fRec17[1];
+			float fTemp13 = std::fabs(fSlow14 * fTemp12);
+			float fTemp14 = ((fTemp13 > fRec16[1]) ? fSlow22 : fSlow20);
+			fRec16[0] = fTemp13 * (1.0f - fTemp14) + fRec16[1] * fTemp14;
+			fRec15[0] = fSlow23 * std::max<float>(2e+01f * std::log10(std::max<float>(1.1754944e-38f, fRec16[0])) - fSlow9, 0.0f) * fSlow8 + fSlow7 * fRec15[1];
+			float fTemp15 = fSlow26 * (fSlow14 * fTemp12 * std::pow(1e+01f, 0.05f * fRec15[0]) + fSlow25 * fVec5[(IOTA0 - iSlow24) & 65535] + fSlow3 * fRec10[0] + fSlow2 * (fTemp6 - fConst16 * fVec3[(IOTA0 - iConst12) & 4095] - fConst15 * fVec3[(IOTA0 - iConst13) & 4095]) + fConst7 * (fRec6[2] + fRec6[0] + 2.0f * fRec6[1]) + fSlow0 * (fRec3[0] + 0.5f * fRec0[0]));
+			output0[i0] = FAUSTFLOAT(fTemp15);
+			output1[i0] = FAUSTFLOAT(fTemp15);
+			iVec0[1] = iVec0[0];
 			fRec2[1] = fRec2[0];
-			iRec5[1] = iRec5[0];
-			fVec2[1] = fVec2[0];
+			fRec1[1] = fRec1[0];
+			fRec0[1] = fRec0[0];
+			fRec5[1] = fRec5[0];
 			fRec4[1] = fRec4[0];
-			fRec3[2] = fRec3[1];
 			fRec3[1] = fRec3[0];
-			fRec6[1] = fRec6[0];
-			fVec3[1] = fVec3[0];
-			IOTA0 = IOTA0 + 1;
+			iRec8[1] = iRec8[0];
+			fVec1[1] = fVec1[0];
 			fRec7[1] = fRec7[0];
-			fVec5[1] = fVec5[0];
-			fRec11[1] = fRec11[0];
-			fRec10[2] = fRec10[1];
-			fRec10[1] = fRec10[0];
+			fRec6[2] = fRec6[1];
+			fRec6[1] = fRec6[0];
 			fRec9[1] = fRec9[0];
-			fRec8[1] = fRec8[0];
-			fVec7[1] = fVec7[0];
-			fRec15[1] = fRec15[0];
-			fRec14[2] = fRec14[1];
+			fVec2[1] = fVec2[0];
+			IOTA0 = IOTA0 + 1;
+			fRec10[1] = fRec10[0];
+			fVec4[1] = fVec4[0];
 			fRec14[1] = fRec14[0];
+			fRec13[2] = fRec13[1];
 			fRec13[1] = fRec13[0];
 			fRec12[1] = fRec12[0];
+			fRec11[1] = fRec11[0];
+			fVec6[1] = fVec6[0];
+			fRec18[1] = fRec18[0];
+			fRec17[2] = fRec17[1];
+			fRec17[1] = fRec17[0];
+			fRec16[1] = fRec16[0];
+			fRec15[1] = fRec15[0];
 		}
 	}
 
@@ -10797,34 +10782,34 @@ struct mydsp : public dsp {
 	#define FAUST_ACTIVES 13
 	#define FAUST_PASSIVES 0
 
-	FAUST_ADDHORIZONTALSLIDER("Fréquence de coupure (LPF)", fHslider6, 1e+03f, 5e+02f, 5e+03f, 1e+01f);
-	FAUST_ADDHORIZONTALSLIDER("Gain général", fHslider12, 0.5f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Niveau de distorsion", fHslider7, 0.4f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Niveau du bruit blanc", fHslider3, 0.7f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Niveau du bruit de poussière", fHslider2, 0.01f, 0.0f, 0.1f, 0.001f);
-	FAUST_ADDHORIZONTALSLIDER("Niveau du bruit du moteur", fHslider0, 0.05f, 0.0f, 0.5f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Niveau du grondement (basse fréquence)", fHslider1, 1.0f, 0.0f, 2.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Ratio du compresseur", fHslider9, 3.0f, 1.0f, 1e+01f, 0.1f);
-	FAUST_ADDHORIZONTALSLIDER("Rétroaction de l'écho", fHslider11, 0.5f, 0.0f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Seuil du compresseur (dB)", fHslider5, -1e+01f, -4e+01f, 0.0f, 1.0f);
-	FAUST_ADDHORIZONTALSLIDER("Temps d'attaque du compresseur (s)", fHslider4, 0.01f, 0.001f, 0.1f, 0.001f);
-	FAUST_ADDHORIZONTALSLIDER("Temps de relâchement du compresseur (s)", fHslider8, 0.1f, 0.01f, 1.0f, 0.01f);
-	FAUST_ADDHORIZONTALSLIDER("Temps de retard de l'écho (s)", fHslider10, 0.4f, 0.1f, 2.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("compress_attack", fHslider4, 0.01f, 0.001f, 0.1f, 0.001f);
+	FAUST_ADDHORIZONTALSLIDER("compress_ratio", fHslider9, 3.0f, 1.0f, 1e+01f, 0.1f);
+	FAUST_ADDHORIZONTALSLIDER("compress_release", fHslider8, 0.1f, 0.01f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("compress_threshold", fHslider5, -1e+01f, -4e+01f, 0.0f, 1.0f);
+	FAUST_ADDHORIZONTALSLIDER("distortion", fHslider7, 0.4f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("dust", fHslider2, 0.01f, 0.0f, 0.1f, 0.001f);
+	FAUST_ADDHORIZONTALSLIDER("echo_delay", fHslider10, 0.1f, 0.1f, 0.25f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("echo_feedback", fHslider11, 0.5f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("gain", fHslider12, 0.5f, 0.0f, 1.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("lowpass_freq", fHslider6, 1e+03f, 5e+02f, 5e+03f, 1e+01f);
+	FAUST_ADDHORIZONTALSLIDER("motor_noise", fHslider0, 0.05f, 0.0f, 0.5f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("rumble", fHslider1, 1.0f, 0.0f, 2.0f, 0.01f);
+	FAUST_ADDHORIZONTALSLIDER("white_noise", fHslider3, 0.7f, 0.0f, 1.0f, 0.01f);
 
 	#define FAUST_LIST_ACTIVES(p) \
-		p(HORIZONTALSLIDER, Fréquence_de_coupure_(LPF), "Fréquence de coupure (LPF)", fHslider6, 1e+03f, 5e+02f, 5e+03f, 1e+01f) \
-		p(HORIZONTALSLIDER, Gain_général, "Gain général", fHslider12, 0.5f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Niveau_de_distorsion, "Niveau de distorsion", fHslider7, 0.4f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Niveau_du_bruit_blanc, "Niveau du bruit blanc", fHslider3, 0.7f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Niveau_du_bruit_de_poussière, "Niveau du bruit de poussière", fHslider2, 0.01f, 0.0f, 0.1f, 0.001f) \
-		p(HORIZONTALSLIDER, Niveau_du_bruit_du_moteur, "Niveau du bruit du moteur", fHslider0, 0.05f, 0.0f, 0.5f, 0.01f) \
-		p(HORIZONTALSLIDER, Niveau_du_grondement_(basse_fréquence), "Niveau du grondement (basse fréquence)", fHslider1, 1.0f, 0.0f, 2.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Ratio_du_compresseur, "Ratio du compresseur", fHslider9, 3.0f, 1.0f, 1e+01f, 0.1f) \
-		p(HORIZONTALSLIDER, Rétroaction_de_l'écho, "Rétroaction de l'écho", fHslider11, 0.5f, 0.0f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Seuil_du_compresseur_(dB), "Seuil du compresseur (dB)", fHslider5, -1e+01f, -4e+01f, 0.0f, 1.0f) \
-		p(HORIZONTALSLIDER, Temps_d'attaque_du_compresseur_(s), "Temps d'attaque du compresseur (s)", fHslider4, 0.01f, 0.001f, 0.1f, 0.001f) \
-		p(HORIZONTALSLIDER, Temps_de_relâchement_du_compresseur_(s), "Temps de relâchement du compresseur (s)", fHslider8, 0.1f, 0.01f, 1.0f, 0.01f) \
-		p(HORIZONTALSLIDER, Temps_de_retard_de_l'écho_(s), "Temps de retard de l'écho (s)", fHslider10, 0.4f, 0.1f, 2.0f, 0.01f) \
+		p(HORIZONTALSLIDER, compress_attack, "compress_attack", fHslider4, 0.01f, 0.001f, 0.1f, 0.001f) \
+		p(HORIZONTALSLIDER, compress_ratio, "compress_ratio", fHslider9, 3.0f, 1.0f, 1e+01f, 0.1f) \
+		p(HORIZONTALSLIDER, compress_release, "compress_release", fHslider8, 0.1f, 0.01f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, compress_threshold, "compress_threshold", fHslider5, -1e+01f, -4e+01f, 0.0f, 1.0f) \
+		p(HORIZONTALSLIDER, distortion, "distortion", fHslider7, 0.4f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, dust, "dust", fHslider2, 0.01f, 0.0f, 0.1f, 0.001f) \
+		p(HORIZONTALSLIDER, echo_delay, "echo_delay", fHslider10, 0.1f, 0.1f, 0.25f, 0.01f) \
+		p(HORIZONTALSLIDER, echo_feedback, "echo_feedback", fHslider11, 0.5f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, gain, "gain", fHslider12, 0.5f, 0.0f, 1.0f, 0.01f) \
+		p(HORIZONTALSLIDER, lowpass_freq, "lowpass_freq", fHslider6, 1e+03f, 5e+02f, 5e+03f, 1e+01f) \
+		p(HORIZONTALSLIDER, motor_noise, "motor_noise", fHslider0, 0.05f, 0.0f, 0.5f, 0.01f) \
+		p(HORIZONTALSLIDER, rumble, "rumble", fHslider1, 1.0f, 0.0f, 2.0f, 0.01f) \
+		p(HORIZONTALSLIDER, white_noise, "white_noise", fHslider3, 0.7f, 0.0f, 1.0f, 0.01f) \
 
 	#define FAUST_LIST_PASSIVES(p) \
 
