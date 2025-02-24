@@ -14,3 +14,5 @@ différence son Vinyl :
 --> https://www.projethomestudio.fr/reverbe-mixage/ 
 
 format WAV
+
+faust -json vinyl.dsp : generer json
