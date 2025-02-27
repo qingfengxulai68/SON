@@ -34,13 +34,8 @@ class MidiController:
         print("\nEnvoi des valeurs MIDI (modifiées uniquement) :")
         for key, value in modified_values.items():
             midi_cc = {
-                # 'compress_threshold':30,
-                # 'compress_ratio':31,
-                # 'compress_attack':32,
-                # 'compress_release':33,
                 'Lowpass Filter': 4,
                 'Distortion': 5,
-                # 'gain': 6,
                 'Volume': 7,
                 'White Noise': 8,
                 'Echo Feedback': 9,
@@ -53,10 +48,6 @@ class MidiController:
             if midi_cc is not None:
                 if midi_cc == 4:
                     midi_value = int(1 + (np.log10(value/20)/np.log10(20000/20))*(127 - 1))
-                # elif midi_cc == 30:
-                    # midi_value = int((value + 40)*(127/40))
-                # elif midi_cc == 31:
-                #     midi_value = int(max(0, min(127, int(value * 12.7))))
                 elif midi_cc == 10:
                     midi_value = int(max(0, min(127, int(value * 1270))))
                 else:
@@ -67,7 +58,6 @@ class MidiController:
 
         # Mettre à jour les valeurs précédentes
         self.previous_values.update(modified_values)
-
         print("Envoi terminé.")
 
     def send_title(self, title):
