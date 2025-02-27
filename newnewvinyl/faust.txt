@@ -1,4 +1,3 @@
-
 import("stdfaust.lib");
 
 // **Gain général**
@@ -9,7 +8,7 @@ original_signal = _;
 
 // **Distorsion harmonique**
 distortion_amount = hslider("distortion", 0.4, 0, 1, 0.01);
-distortion = original_signal * (1 + (original_signal * distortion_amount));
+distortion(in) = in * (1 + (in * distortion_amount));
 
 // **Atténuation des hautes fréquences**
 lowpass_freq = hslider("lowpass_freq", 1000, 500, 5000, 10);
@@ -42,7 +41,7 @@ delayed_signal = dynamic_compression : @(echo_delay * ma.SR) * echo_feedback;
 echoed_signal = dynamic_compression + delayed_signal;
 
 // **Mixage final**
-mixed_signal = (echoed_signal + white_noise + dust_sound + rumble + motor_noise) * gain;
+mixed_signal = _ <: (echoed_signal + white_noise + dust_sound + rumble + motor_noise) * gain;
 
 process = mixed_signal <: _,_;
 

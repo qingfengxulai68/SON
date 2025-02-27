@@ -78,46 +78,87 @@
 		{
 			"type": "vgroup",
 			"label": "vinyl",
-			"items": [ 
+			"items": [
+				{
+					"type": "hslider",
+					"label": "lowpass_freq",
+					"shortname": "Lowpass Filter",
+					"address": "/vinyl/lowpass_freq",
+					"init": 1000,
+					"min": 100,
+					"max": 20000,
+					"step": 10
+				},
+				{
+					"type": "hslider",
+					"label": "distortion",
+					"shortname": "Distortion",
+					"address": "/vinyl/distortion",
+					"init": 0.04,
+					"min": 0,
+					"max": 1,
+					"step": 0.01
+				},
+				
 				{
 					"type": "hslider",
 					"label": "white_noise",
-					"shortname": "white_noise",
+					"shortname": "White Noise",
 					"address": "/vinyl/white_noiser",
-					"init": 0.003,
+					"init": 0.7,
 					"min": 0,
 					"max": 1,
-					"step": 0.001
+					"step": 0.01
 				},
 				{
 					"type": "hslider",
 					"label": "dust",
-					"shortname": "dust",
+					"shortname": "Dust",
 					"address": "/vinyl/dust",
-					"init": 0.04,
+					"init": 0.007,
 					"min": 0,
-					"max": 1,
+					"max": 0.1,
 					"step": 0.001
 				},
 				{
 					"type": "hslider",
 					"label": "rumble",
-					"shortname": "rumble",
+					"shortname": "Rumble",
 					"address": "/vinyl/rumble",
-					"init": 0.05,
+					"init": 1,
 					"min": 0,
 					"max": 1,
-					"step": 0.001
+					"step": 0.01
 				},
 				{
 					"type": "hslider",
 					"label": "motor_noise",
-					"shortname": "motor_noise",
+					"shortname": "Motor Noise",
 					"address": "/vinyl/motor_noise",
-					"init": 0.05,
+					"init": 0.3,
 					"min": 0,
 					"max": 1,
-					"step": 0.001
+					"step": 0.01
+				},
+				{
+					"type": "hslider",
+					"label": "echo_feedback",
+					"shortname": "Echo Feedback",
+					"address": "/vinyl/echo_feedback",
+					"init": 0.5,
+					"min": 0,
+					"max": 1,
+					"step": 0.01
+				},
+				{
+					"type": "hslider",
+					"label": "echo_delay",
+					"shortname": "Echo Delay",
+					"address": "/vinyl/echo_daley",
+					"init": 0.1,
+					"min": 0,
+					"max": 0.25,
+					"step": 0.01
 				},
 				{
 					"type": "nentry",

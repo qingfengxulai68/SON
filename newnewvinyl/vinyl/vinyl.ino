@@ -1,3 +1,9 @@
+#include <DFRobotDFPlayerMini.h>
+
+#include <DFRobotDFPlayerMini.h>
+
+#include <DFRobotDFPlayerMini.h>
+
 // //button功能删除后 && potentiometre删除后
 // #include <Audio.h>
 // #include <SPI.h>
@@ -45,7 +51,7 @@
 
 //   // 如果音乐播放结束，自动重新播放
 //   if (!audioSD.isPlaying()) {
-//     audioSD.play("yintian.wav");
+//     audioSD.play("YINTIAN.WAV");
 //   }
 
 //   delay(100); // 延迟，避免过多重复执行
@@ -368,11 +374,10 @@ AudioConnection patchCord1(vinyl, 0, mix, 0);
 AudioConnection patchCord2(mix, 0, out, 0); 
 AudioConnection patchCord3(mix, 0, out, 1); 
 
-  // Stocke les caractères du titre (max 29 + '\0')
 int titleIndex = 0;
 bool titleReceived = false;
 bool isPlaying = true;
-char receivedTitle[14] = "";
+char receivedTitle[30] = "";
 
 void setup() {
   Serial.begin(9600);
@@ -381,7 +386,7 @@ void setup() {
   usbMIDI.setHandleControlChange(handleControlChange);
 
   audioShield.enable();
-  audioShield.volume(0.5);
+  audioShield.volume(0.2);
   AudioMemory(20);
   mix.gain(0, 1);
   mix.gain(1, 0);
@@ -399,17 +404,11 @@ void setup() {
 
 void loop() {
   usbMIDI.read();  // Vérifie les messages MIDI entrants
+ 
   // Si un titre a été complètement reçu, on le charge
   if (titleReceived) {
-    playTitle();
+    playFile(receivedTitle);
     titleReceived = false;
-  }
-
-  // Gérer la lecture automatique si elle est activée
-  if (isPlaying && !audioSD.isPlaying()) {
-    audioSD.play(receivedTitle);
-    Serial.print("Lecture automatique : ");
-    Serial.println(receivedTitle);
   }
 
   delay(100);
@@ -419,7 +418,26 @@ void handleControlChange(byte channel, byte controller, byte value) {
   float newValue = value / 127.0;
   
   switch (controller) {
+    // case 30:
+    //   newValue = ((value * 40) / 127) - 40;
+    //   vinyl.setParamValue("compress_threshold", newValue);
+    //   Serial.print("compress_threshold: ");
+    //   Serial.println(newValue);
+    // case 31:
+    //   newValue = value / 12.7;
+    //   vinyl.setParamValue("compress_ratio", newValue);
+    //   Serial.print("compress_ratio: ");
+    //   Serial.println(newValue);
+    // case 32:
+    //   vinyl.setParamValue("compress_attack", newValue);
+    //   Serial.print("compress_attack: ");
+    //   Serial.println(newValue);
+    // case 33:
+    //   vinyl.setParamValue("compress_release", newValue);
+    //   Serial.print("compress_release: ");
+    //   Serial.println(newValue);
     case 4:
+      newValue = 20.0 * pow(20000.0/20.0, (value - 1.0)/(127.0-1.0));
       vinyl.setParamValue("lowpass_freq", newValue);
       Serial.print("lowpass_freq: ");
       Serial.println(newValue);
@@ -429,10 +447,10 @@ void handleControlChange(byte channel, byte controller, byte value) {
       Serial.print("distortion: ");
       Serial.println(newValue);
       break;
-    case 6:
-      vinyl.setParamValue("gain", newValue);
-      Serial.print("gain: ");
-      Serial.println(newValue);
+    // case 6:
+    //   vinyl.setParamValue("gain", newValue);
+    //   Serial.print("gain: ");
+    //   Serial.println(newValue);
       break;
     case 7:  // Volume général
         audioShield.volume(newValue);
@@ -453,6 +471,7 @@ void handleControlChange(byte channel, byte controller, byte value) {
       break;
 
     case 10:  // Son de poussière
+      newValue = value / 1270.0;
       vinyl.setParamValue("dust", newValue);
       Serial.print("Poussière: ");
       Serial.println(newValue);
@@ -478,27 +497,20 @@ void handleControlChange(byte channel, byte controller, byte value) {
 
     case 14:  // Play/Pause
       if (value == 127) {  
-        if (!audioSD.isPlaying()) {
-          isPlaying = true;
-          Serial.println("Lecture : PLAY");
-          audioSD.play(receivedTitle);
-        } else {
-          Serial.println("Déjà en lecture.");
-        }
-      } else {  
-        isPlaying = false;
-        Serial.println("Lecture : PAUSE");
-        audioSD.stop();
+        // toggle play/pause state
+        audioSD.togglePlayPause();
       }
       break;
 
-
-    case 26:  // Réception du titre en ASCII (max 7 caractères)
+    case 26:
       if (value == 0) {
           strcpy(receivedTitle, "yintian.wav");  // Copier le nom du fichier
       }
       else if (value == 1) {
           strcpy(receivedTitle, "k.wav");
+      }
+      else if (value == 3) {
+          strcpy(receivedTitle, "beautifulgirls.wav");
       }
       else {
           strcpy(receivedTitle, "loststars.wav");
@@ -515,17 +527,14 @@ void handleControlChange(byte channel, byte controller, byte value) {
   }
 }
 
-void playTitle() {
-  Serial.print("Lecture du fichier : ");
+void playFile(char* receivedTitle) {
+  Serial.print("Playing file: ");
   Serial.println(receivedTitle);
+  audioSD.play(receivedTitle);
 
-  // if (SD.exists(receivedTitle)) {
-    audioSD.play(receivedTitle);
-    isPlaying = true;
-  // } else {
-    // Serial.println("Fichier introuvable sur la carte SD !");
-  // }
+  delay(5);
 }
+
 
 
 

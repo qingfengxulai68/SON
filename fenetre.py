@@ -1,108 +1,111 @@
 import tkinter as tk
+from tkinter import ttk
 import json
 
 class Fenetre:
     def __init__(self, root, midi_controller, json_file="parametres.json"):
         self.root = root
-        self.root.title("Fenêtre de Contrôle")
-        self.midi_controller = midi_controller  # Instance du MidiController
+        self.root.title("Contrôle Audio")
+        self.root.geometry("700x660")
+        self.root.configure(bg="#2C3E50")
 
-        self.sliders = {}  # Stocke les sliders avec leurs adresses
-
-        # Zone d'affichage des valeurs actuelles
-        # self.values_display = tk.Text(self.root, height=10, width=50, state="disabled", bg="#f0f0f0")
-        # self.values_display.pack(pady=10)
-
-        # Ajout du choix du titre
-        self.titles = ["YINTIAN.WAV", "SONG_1.WAV", "SONG_2.WAV"]  # Liste des titres disponibles
+        self.midi_controller = midi_controller
+        self.sliders = {}
+        self.titles = ["k.wav", "yintian.wav", "loststars.wav", "beautifulgirls.wav"]
         self.selected_title = tk.StringVar(value=self.titles[0])
+        self.send_title()
 
-        title_frame = tk.Frame(self.root)
-        title_frame.pack(pady=10)
+        self.init_values = {}
 
-        tk.Label(title_frame, text="Choisir un titre:").pack(side="left", padx=5)
-        self.title_menu = tk.OptionMenu(title_frame, self.selected_title, *self.titles)
-        self.title_menu.pack(side="right", padx=5)
+        style = ttk.Style()
+        style.configure("TButton", padding=10, relief="flat", background="#34495E", foreground="#34495E", font=("Georgia", 10))
+        style.configure("TLabel", background="#2C3E50", foreground="white", font=("Georgia", 10))
 
-        # Ajout des boutons Play/Pause
-        self.etat = "play"
+        title_frame = ttk.LabelFrame(self.root, padding=5)
+        title_frame.pack(pady=5, padx=10, fill="x")
 
-        control_frame = tk.Frame(self.root)
-        control_frame.pack(pady=5)
+        ttk.Label(title_frame, text="Title :", style="TLabel").pack(side="left", padx=5)
+        self.title_menu = ttk.Combobox(title_frame, textvariable=self.selected_title, values=self.titles, state="readonly")
+        self.title_menu.pack(side="right", padx=5, fill="x", expand=True)
 
-        self.song_button = tk.Button(control_frame, text="Change song", command=self.send_title)
-        self.song_button.pack(side="top", padx=5)
+        control_frame = ttk.Frame(self.root, padding=5)
+        control_frame.pack(pady=5, padx=10, fill="x")
+        ttk.Button(control_frame, text="Change song", command=self.send_title, style="TButton").pack(side="left", pady=5, expand=True)
+        
+        ttk.Button(control_frame, text="Pause/Play", command=self.send_pauseplay, style="TButton").pack(side="right", padx=5, expand=True)
 
-        self.play_button = tk.Button(control_frame, text="Play", command=self.send_play)
-        self.play_button.pack(side="left", padx=5)
-
-        self.pause_button = tk.Button(control_frame, text="Pause", command=self.send_pause)
-        self.pause_button.pack(side="right", padx=5)
-
-        # Charger le JSON FAUST
         with open(json_file, "r") as file:
             self.faust_config = json.load(file)
 
-        # Générer les sliders
+        slider_frame = ttk.Frame(self.root)
+        slider_frame.pack(pady=10, padx=10, fill="both")
+
+        left_frame = ttk.Frame(slider_frame)
+        left_frame.pack(side="left", fill="both", expand=True, padx=10)
+        right_frame = ttk.Frame(slider_frame)
+        right_frame.pack(side="right", fill="both", expand=True, padx=10)
+
         for group in self.faust_config["ui"]:
             if "items" in group:
                 for param in group["items"]:
                     if param["type"] in ["hslider", "nentry"]:
-                        self.create_slider(param)
+                        if param["shortname"] == "Volume":
+                            self.create_slider(param, self.root)
+                        elif len(self.sliders) % 2 == 0:
+                            self.create_slider(param, left_frame)
+                        else:
+                            self.create_slider(param, right_frame)
+                        self.init_values[param["shortname"]] = param["init"]
 
-        # Boutons de contrôle
-        button_frame = tk.Frame(self.root)
-        button_frame.pack(pady=10)
+        button_frame = ttk.Frame(self.root, padding=5)
+        button_frame.pack(pady=10, padx=10, fill="x")
 
-        self.get_values_button = tk.Button(button_frame, text="Valider", command=self.get_values)
-        self.get_values_button.pack(side="left", padx=5)
+        ttk.Button(button_frame, text="Valider", command=self.send_midi, style="TButton").pack(side="left", padx=5, expand=True)
+        ttk.Button(button_frame, text="Reset", command=self.reset, style="TButton").pack(side="right", padx=5, expand=True)
+        ttk.Button(button_frame, text="Supprimer Effet", command=self.remove_effect, style="TButton").pack(side="bottom", pady=5, expand=True)
 
-        self.send_midi_button = tk.Button(button_frame, text="Envoyer MIDI", command=self.send_midi)
-        self.send_midi_button.pack(side="right", padx=5)
+        self.send_midi()
 
-        self.get_values()
+    def create_slider(self, param, parent):
+        frame = ttk.LabelFrame(parent, text=param["shortname"], padding=5)
+        frame.pack(pady=2, padx=10, fill="x")
 
-    def create_slider(self, param):
-        """Crée un slider Tkinter en fonction des paramètres FAUST"""
-        frame = tk.Frame(self.root)
-        frame.pack(pady=5, fill="x")
-
-        label = tk.Label(frame, text=param["shortname"], width=20, anchor="w")
-        label.pack(side="left", padx=5)
-
-        slider = tk.Scale(frame, from_=param["min"], to=param["max"],
-                          resolution=param["step"], orient="horizontal", length=300)
+        slider = ttk.Scale(frame, from_=param["min"], to=param["max"], orient="horizontal", length=300)
         slider.set(param["init"])
-        slider.pack(side="right", padx=5)
-
-        # Stocker le slider avec son adresse FAUST
+        slider.pack(pady=2, fill="x", expand=True)
+        
+        value_label = ttk.Label(frame, text=f"{param['init']}", style="TLabel")
+        value_label.pack(side="top", padx=5)
+        
+        def update_label(value):
+            value_label.config(text=f"{float(value):.2f}")
+        
+        slider.config(command=update_label)
         self.sliders[param["shortname"]] = slider
 
-    def get_values(self):
-        """Récupère et affiche les valeurs actuelles des sliders"""
-        values = {address: slider.get() for address, slider in self.sliders.items()}
+    def reset(self):
+        for name, slider in self.sliders.items():
+            for n, value in self.init_values.items():
+                if name == n:
+                    slider.set(value)
+        self.send_midi()
 
-        print("\n=== Valeurs actuelles ===")
-        for key, value in values.items():
-            print(f"{key}: {value}")
-
-        return values  # Retourne les valeurs
+    def remove_effect(self):
+        effects = {"Lowpass Filter": 20000, "Distortion": 0, 
+                   "White Noise": 0, "Echo Feedback": 0, "Echo Delay": 0, 
+                   "Dust": 0, "Rumble": 0, "Motor Noise": 0}
+        for name, value in effects.items():
+            if name in self.sliders:
+                self.sliders[name].set(value)
+        self.send_midi()
 
     def send_midi(self):
-        """Récupère les valeurs et les envoie au MIDI"""
-        values = self.get_values()
+        values = {name: slider.get() for name, slider in self.sliders.items()}
+        print(values)
         self.midi_controller.send_values(values)
 
     def send_title(self):
-        """Envoie le titre sélectionné au contrôleur MIDI"""
         self.midi_controller.send_title(self.selected_title.get())
 
-    def send_play(self):
-        """Envoie l'état Play au contrôleur MIDI"""
-        self.etat = "play"
-        self.midi_controller.send_etat(self.etat)
-
-    def send_pause(self):
-        """Envoie l'état Pause au contrôleur MIDI"""
-        self.etat = "pause"
-        self.midi_controller.send_etat(self.etat)
+    def send_pauseplay(self):
+        self.midi_controller.send_etat()
